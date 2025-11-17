@@ -1,1 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Standard Form (Scientific Notation) – Interactive Worksheet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Confetti for celebration -->
+  <script async src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <style>
+    :root{
+      --accent:#1976d2; --light:#e3f2fd; --error:#e53935; --success:#43a047;
+      --field-w:4.2rem; --exp-w:2.6rem; --shadow:0 2px 4px rgba(0,0,0,.08);
+    }
+    *{box-sizing:border-box}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0;padding:1rem;background:var(--light);}
+    h1{text-align:center;color:var(--accent);margin-bottom:.3rem}
+    p{max-width:900px;margin:.4rem auto;text-align:center}
+    .logo{position:absolute;top:12px;left:12px;width:140px;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+    #scoreTop,#score{font-size:1.05rem;font-weight:600;text-align:center;color:#000;margin:.3rem auto}
 
+    /* Accordion */
+    details{max-width:900px;margin:1rem auto;border:2px solid var(--accent);border-radius:6px;background:#fff;box-shadow:var(--shadow);}
+    summary{padding:.6rem 1rem;font-weight:700;cursor:pointer;color:#1976d2;}
+    summary::-webkit-details-marker{display:none;}
+    .hint{padding:0 1.1rem 1rem;font-size:.96rem;line-height:1.5}
+    .hint ul{padding-left:1.2rem;margin:.4rem 0;}
+    .example{margin:.25rem 0;text-align:center;font-size:1.05rem;}
+    .sf{white-space:nowrap}
+    .sf sup{font-size:.85em}
+
+    /* Grid / Questions */
+    .grid{display:grid;gap:1rem;max-width:900px;margin:1rem auto;}
+    .problem{
+      position:relative; /* anchor for absolute-positioned marker */
+      display:grid;
+      grid-template-columns:1fr auto auto;
+      align-items:center;
+      gap:.6rem;
+      /* Extra right & bottom padding so exp box and marker never spill out */
+      padding:.75rem calc(1rem + var(--exp-w) + 1.4rem) 2.25rem 1rem;
+      background:#fff;border-radius:.6rem;box-shadow:var(--shadow);
+    }
+    .expr{font-size:1.25rem}
+    .type-tag{font-size:.7rem;font-weight:700;color:#fff;background:var(--accent);padding:.2rem .5rem;border-radius:999px;margin-right:.45rem;white-space:nowrap}
+
+    /* Answer Inputs */
+    .input-wrapper{display:flex;align-items:center;gap:.4rem}
+    .base-input{width:var(--field-w);text-align:center;border:1px solid #999;border-radius:4px;font-size:1.05rem;background:#fafafa;padding:.25rem 0;}
+    .base-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px #1976d222}
+
+    /* Standard-form input: a × 10^n */
+    .std-input{display:flex;align-items:center;gap:.4rem; margin-right:0;} /* keep it tidy */
+    .std-input .coeff{width:var(--field-w)}
+    .ten-block{position:relative;display:inline-flex;align-items:flex-start;line-height:1}
+    .ten-text{font-size:1.15rem;display:inline-block;padding:0 .15rem}
+    .exp-input{
+      position:absolute;
+      top:-1.05rem; left:calc(100% + .2rem); /* pulled a bit closer so it uses less right space */
+      width:var(--exp-w); text-align:center;
+      border:1px solid #999; border-radius:4px; font-size:.9rem; background:#fafafa; height:1.6rem
+    }
+    .exp-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px #1976d222}
+
+    /* Ordinary number input */
+    .ordinary{width:10rem}
+
+    /* Buttons */
+    button{padding:.5rem .9rem;font-size:.85rem;font-weight:700;border:none;border-radius:.35rem;cursor:pointer;transition:background .2s;user-select:none}
+    #checkBtn{background:var(--accent);color:#fff;} #checkBtn:hover{background:#0f5ca4}
+    #newBtn{background:#555;color:#fff;} #newBtn:hover{background:#333}
+    #revealBtn{background:#eee;} #revealBtn:hover{background:#ddd}
+
+    /* Marker (bottom-right of each card) */
+    .marker{
+      position:absolute;
+      bottom:.45rem; right:.6rem;
+      font-size:1.6rem;font-weight:800;min-width:1.8rem;text-align:center;
+      line-height:1;
+      pointer-events:none;
+    }
+    .ok{color:var(--success)} .no{color:var(--error)}
+    .msg{font-size:.85rem;color:#555}
+
+    /* Celebration */
+    .celebrate-banner{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--success);color:#fff;padding:.6rem 1rem;border-radius:999px;box-shadow:var(--shadow);z-index:9999;font-weight:800}
+
+    /* Print tweaks */
+    @media print{
+      #checkBtn, #newBtn, #revealBtn, details, .logo, #score, #scoreTop{display:none!important}
+      body{background:#fff}
+      .problem{page-break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+  <img src="https://lirp.cdn-website.com/b085c470/dms3rep/multi/opt/Bucks%2BCollege%2BGroup-e5af1b68-1920w.jpg" alt="Bucks College Group logo" class="logo">
+  <h1>Standard Form (Scientific Notation)</h1>
+  <p id="scoreTop"></p>
+
+  <!-- Hint accordion (HTML, no TeX) -->
+  <details>
+    <summary>Need a hint? (click to expand)</summary>
+    <div class="hint">
+      <p><b>Standard form</b> means writing a number as <span class="sf">a × 10<sup>n</sup></span> where <span class="sf">1 ≤ a &lt; 10</span> and <em>n</em> is an integer.</p>
+
+      <strong>Adding in standard form</strong>
+      <ul>
+        <li>Make the powers of 10 the same (rewrite one number if needed).</li>
+        <li>Add the coefficients and renormalise so <span class="sf">1 ≤ a &lt; 10</span>.</li>
+      </ul>
+      <div class="example"><span class="sf">(3.2 × 10<sup>5</sup>) + (7.1 × 10<sup>5</sup>) = 10.3 × 10<sup>5</sup> = 1.03 × 10<sup>6</sup></span></div>
+
+      <strong>Subtracting in standard form</strong>
+      <ul>
+        <li>Match powers of 10, subtract coefficients, renormalise.</li>
+      </ul>
+      <div class="example"><span class="sf">(8.4 × 10<sup>4</sup>) − (2.9 × 10<sup>4</sup>) = 5.5 × 10<sup>4</sup></span></div>
+
+      <strong>Multiplying in standard form</strong>
+      <ul>
+        <li>Multiply coefficients, <em>add</em> exponents, renormalise.</li>
+      </ul>
+      <div class="example"><span class="sf">(6 × 10<sup>3</sup>) × (2.5 × 10<sup>4</sup>) = 15 × 10<sup>7</sup> = 1.5 × 10<sup>8</sup></span></div>
+
+      <strong>Dividing in standard form</strong>
+      <ul>
+        <li>Divide coefficients, <em>subtract</em> exponents, renormalise.</li>
+      </ul>
+      <div class="example"><span class="sf">(9 × 10<sup>6</sup>) ÷ (3 × 10<sup>2</sup>) = 3 × 10<sup>4</sup></span></div>
+
+      <strong>Ordinary → Standard</strong>
+      <ul>
+        <li>Move the decimal so the first digit is non-zero; count moves for <em>n</em>.</li>
+      </ul>
+      <div class="example"><span class="sf">0.00057 = 5.7 × 10<sup>−4</sup> &nbsp; &nbsp; 18,400,000 = 1.84 × 10<sup>7</sup></span></div>
+
+      <strong>Standard → Ordinary</strong>
+      <ul>
+        <li>Shift the decimal point: right for positive <em>n</em>, left for negative <em>n</em>.</li>
+      </ul>
+      <div class="example"><span class="sf">2.3 × 10<sup>−3</sup> = 0.0023 &nbsp; &nbsp; 7.5 × 10<sup>4</sup> = 75,000</span></div>
+    </div>
+  </details>
+
+  <p>Enter answers in <em>standard form</em> using the boxes: coefficient next to “×10” and the small power box on the top-right. For “Standard → Ordinary”, enter a normal number (you may use <code>e</code>-notation like <code>1.2e5</code>).</p>
+
+  <div id="problems" class="grid"></div>
+
+  <div style="text-align:center;margin-top:.5rem;display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap">
+    <button id="checkBtn">Check answers</button>
+    <button id="revealBtn">Reveal answers</button>
+    <button id="newBtn">New questions</button>
+  </div>
+  <p id="score"></p>
+
+  <div id="celebrate" class="celebrate-banner" hidden>Perfect score! 🎉 Well done!</div>
+
+<script>
+(function(){
+  const $grid = document.getElementById('problems');
+  const TOTAL = 15;
+
+  // --- Utilities ---
+  const randi=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+  const choice=arr=>arr[randi(0,arr.length-1)];
+  const roundSig=(x,s=3)=>{ if(x===0) return 0; const n=Math.floor(Math.log10(Math.abs(x))); const f=10**(s-1-n); return Math.round(x*f)/f; };
+  const nearlyEqual=(a,b)=>{
+    if(!isFinite(a) || !isFinite(b)) return false;
+    if(a===b) return true;
+    const diff=Math.abs(a-b), scale=Math.max(1,Math.abs(a),Math.abs(b));
+    return diff/scale<1e-6;
+  };
+
+  function toStandardFromValue(val){
+    if(val===0) return {a:0,n:0,value:0};
+    let n = Math.floor(Math.log10(Math.abs(val)));
+    let a = val / 10**n;
+    while(Math.abs(a)>=10){ a/=10; n++; }
+    while(Math.abs(a)<1){ a*=10; n--; }
+    return {a, n, value: a*10**n};
+  }
+
+  function normalise(a,n){
+    if(a===0) return {a:0,n:0};
+    while(Math.abs(a)>=10){ a/=10; n++; }
+    while(Math.abs(a)>0 && Math.abs(a)<1){ a*=10; n--; }
+    return {a, n};
+  }
+
+  // Allowed exponent helpers: in [-10, 10], excluding 0 and 1
+  const MIN_E = -10, MAX_E = 10;
+  const FORBIDDEN = new Set([0,1]);
+  function isAllowedExp(e){ return e>=MIN_E && e<=MAX_E && !FORBIDDEN.has(e); }
+
+  // Pick a single exponent within allowed range
+  function pickExp(min=MIN_E,max=MAX_E){
+    for(let tries=0; tries<100; tries++){
+      const e = randi(min,max);
+      if(isAllowedExp(e)) return e;
+    }
+    return -2; // safe fallback
+  }
+
+  // Pick a pair for add/sub: same or differ by 1 or 2; both allowed and within range
+  function pickExpPair(){
+    const diffs=[0,1,2];
+    for(let tries=0; tries<200; tries++){
+      const diff = choice(diffs);
+      const e1 = pickExp();
+      const sign = choice([-1,1]);
+      let e2 = e1 + sign*diff;
+      if(!isAllowedExp(e2)) e2 = e1 - sign*diff;
+      if(isAllowedExp(e2) && Math.abs(e2-e1)<=2) return [e1,e2];
+    }
+    const e = pickExp();
+    return [e,e];
+  }
+
+  const sf = (a,e)=>`<span class="sf">${a} × 10<sup>${e}</sup></span>`;
+
+  // Ensure final answer exponent is allowed and within range (no 0 or +1)
+  function ensureGoodAnswer(makeProblemFn){
+    for(let tries=0; tries<200; tries++){
+      const p = makeProblemFn();
+      if(p.ansType==='standard'){
+        const n = p.ans.n;
+        if(!isAllowedExp(n)) continue;
+      }
+      return p;
+    }
+    return makeProblemFn();
+  }
+
+  // --- Problem Generators ---
+  function genAddRaw(){
+    const [e1,e2] = pickExpPair();
+    const a = randi(2,8), b = randi(1,7);
+    const val = a*10**e1 + b*10**e2;
+    const ans = toStandardFromValue(val);
+    return {type:'add', text:`(${sf(a,e1)}) + (${sf(b,e2)})`, ansType:'standard', ans};
+  }
+  const genAdd = ()=>ensureGoodAnswer(genAddRaw);
+
+  function genSubRaw(){
+    for(let tries=0; tries<200; tries++){
+      const [e1,e2] = pickExpPair();
+      const a = randi(4,9), b = randi(1,6);
+      const v1 = a*10**e1, v2 = b*10**e2;
+      if(v1<=v2) continue; // keep result positive/non-zero
+      const val = v1 - v2;
+      const ans = toStandardFromValue(val);
+      return {type:'sub', text:`(${sf(a,e1)}) − (${sf(b,e2)})`, ansType:'standard', ans};
+    }
+    const e = pickExp();
+    let a = randi(5,9), b = randi(1,4);
+    const val = a*10**e - b*10**e;
+    const ans = toStandardFromValue(val);
+    return {type:'sub', text:`(${sf(a,e)}) − (${sf(b,e)})`, ansType:'standard', ans};
+  }
+  const genSub = ()=>ensureGoodAnswer(genSubRaw);
+
+  function genMulRaw(){
+    const e1 = pickExp(), e2 = pickExp();
+    const a = choice([1.2,1.5,2,2.5,3,3.6,4,4.5,5,6.4,7.2,8,9]);
+    const b = choice([1.1,1.25,1.6,2,2.4,3,3.5,4,5,6,7.5,8,9]);
+    const prod = a*b; const e = e1+e2;
+    let {a:ca, n:cn} = normalise(prod, e);
+    const val = ca * 10**cn;
+    return {type:'mul', text:`(${sf(a,e1)}) × (${sf(b,e2)})`, ansType:'standard', ans:{a:ca, n:cn, value:val}};
+  }
+  const genMul = ()=>ensureGoodAnswer(genMulRaw);
+
+  function genDivRaw(){
+    const e1 = pickExp(), e2 = pickExp();
+    const a = choice([1.2,1.5,2,2.4,3,3.6,4.5,6,7.2,8,9]);
+    const b = choice([1.2,1.5,2,2.5,3,3.6,4,5,6,7.5,9]);
+    const quot = a/b; const e = e1-e2;
+    let {a:ca, n:cn} = normalise(quot, e);
+    const val = ca * 10**cn;
+    return {type:'div', text:`(${sf(a,e1)}) ÷ (${sf(b,e2)})`, ansType:'standard', ans:{a:ca, n:cn, value:val}};
+  }
+  const genDiv = ()=>ensureGoodAnswer(genDivRaw);
+
+  function genToStdRaw(){
+    const e = pickExp(-10,10);
+    const a = randi(1,9);
+    const ordinary = (e>=0)? (a.toString() + '0'.repeat(e)) : ('0.' + '0'.repeat(-e-1) + a.toString());
+    const ans = normalise(a, e);
+    const val = ans.a * 10**ans.n;
+    return {type:'toStd', text:`Write ${ordinary} in standard form`, ansType:'standard', ans:{a:ans.a, n:ans.n, value:val}};
+  }
+  const genToStd = ()=>ensureGoodAnswer(genToStdRaw);
+
+  function genToOrd(){
+    const e = pickExp(-10,10);
+    const a = choice([1.2,1.5,2,2.5,3,3.8,4.2,5,6.4,7.1,8.6,9]);
+    const val = a * 10**e;
+    return {type:'toOrd', text:`${sf(a,e)} in ordinary form`, ansType:'ordinary', ans:{value:val, a:a, n:e}};
+  }
+
+  const gens = { add:genAdd, sub:genSub, mul:genMul, div:genDiv, toStd:genToStd, toOrd:genToOrd };
+
+  function planQuestions(){
+    // fixed mix totaling 15
+    const base = ['add','sub','mul','div','toStd','toOrd'];
+    const target = {add:3, sub:3, mul:3, div:2, toStd:2, toOrd:2};
+    const out=[]; base.forEach(t=>{ for(let i=0;i<target[t];i++) out.push(t); });
+    for(let i=out.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [out[i],out[j]]=[out[j],out[i]]; }
+    return out.slice(0,TOTAL);
+  }
+
+  // --- Rendering ---
+  let problems=[];
+  function buildRow(i,p){
+    const label = ({add:'Add', sub:'Subtract', mul:'Multiply', div:'Divide', toStd:'Ordinary → Standard', toOrd:'Standard → Ordinary'})[p.type];
+    const ansBox = p.ansType==='standard'
+      ? `<div class='input-wrapper std-input' id='wrap${i}'>
+           <input aria-label='coefficient' class='base-input coeff' inputmode='decimal' placeholder='a'>
+           <span class='ten-block'>
+             <span class='ten-text'>×10</span>
+             <input aria-label='exponent' class='exp-input exp' inputmode='numeric' placeholder='n'>
+           </span>
+         </div>`
+      : `<div class='input-wrapper' id='wrap${i}'>
+           <input aria-label='ordinary number' class='base-input ordinary' inputmode='decimal' placeholder='answer'>
+         </div>`;
+
+    return `<div class='problem' data-idx='${i}' data-type='${p.type}'>
+      <div class='expr'><span class='type-tag'>${label}</span> <span class='math'>${p.text}</span></div>
+      ${ansBox}
+      <span class='marker'></span>
+      <span class='msg'></span>
+    </div>`;
+  }
+
+  function render(){
+    problems.length=0; $grid.innerHTML='';
+    const plan = planQuestions();
+    for(let i=0;i<plan.length;i++){
+      const t = plan[i];
+      const p = gens[t]();
+      problems.push(p);
+      $grid.insertAdjacentHTML('beforeend', buildRow(i,p));
+    }
+    updateScore('');
+    reveal(false);
+  }
+
+  function updateScore(t){
+    document.getElementById('score').textContent=t;
+    document.getElementById('scoreTop').textContent=t;
+  }
+
+  let hasCelebrated=false;
+  function celebrate(){
+    if(hasCelebrated) return; hasCelebrated=true;
+    const b=document.getElementById('celebrate');
+    b.hidden=false; setTimeout(()=>b.hidden=true, 4000);
+    if(window.confetti){
+      const end=Date.now()+1500;
+      (function frame(){
+        confetti({ particleCount: 7, angle: 60, spread: 55, origin: { x: 0 } });
+        confetti({ particleCount: 7, angle: 120, spread: 55, origin: { x: 1 } });
+        if(Date.now()<end) requestAnimationFrame(frame);
+      })();
+    }
+  }
+
+  function check(){
+    let ok=0;
+    document.querySelectorAll('.problem').forEach((row,i)=>{
+      const p = problems[i];
+      const mark = row.querySelector('.marker');
+      const msg = row.querySelector('.msg');
+      let correct=false, message='';
+      if(p.ansType==='standard'){
+        const coeff = parseFloat(row.querySelector('.coeff').value.trim());
+        const exp = parseInt(row.querySelector('.exp').value.trim());
+        if(isNaN(coeff) || isNaN(exp)){
+          /* Removed the 'Enter both boxes' message as requested */
+          correct=false; message='';
+        } else if(!(Math.abs(coeff)>=1 && Math.abs(coeff)<10)){
+          correct=false; message='Not in standard form (1 ≤ a < 10)';
+        } else {
+          const studentVal = coeff * 10**exp;
+          const truth = p.ans.value;
+          correct = nearlyEqual(studentVal, truth);
+          message = correct? '':'Check place value / renormalise';
+        }
+      } else {
+        const valStr = row.querySelector('.ordinary').value.trim();
+        if(!valStr){ correct=false; message='Enter a number'; }
+        else{
+          const studentVal = Number(valStr);
+          if(Number.isNaN(studentVal)){ correct=false; message='Not a valid number'; }
+          else { correct = nearlyEqual(studentVal, p.ans.value); message = correct?'':'Re-check decimal shifts'; }
+        }
+      }
+      if(correct){ mark.textContent='✓'; mark.className='marker ok'; msg.textContent=''; ok++; }
+      else { mark.textContent='✗'; mark.className='marker no'; msg.textContent=message; }
+    });
+    updateScore(`You scored ${ok}/${TOTAL}`);
+    if(ok===TOTAL) celebrate();
+  }
+
+  function reveal(show=true){
+    document.querySelectorAll('.problem').forEach((row,i)=>{
+      const p = problems[i];
+      let sol='';
+      if(p.ansType==='standard'){
+        const a = roundSig(p.ans.a, 3);
+        const n = p.ans.n;
+        sol = `${a}×10^${n}`;
+      } else {
+        const val = p.ans.value;
+        if(Math.abs(val) >= 1e6 || (Math.abs(val) < 1e-3 && val!==0)){
+          sol = val.toExponential();
+        } else {
+          sol = (Math.round(val*1e10)/1e10).toLocaleString('en-GB');
+        }
+      }
+      row.querySelector('.msg').textContent = show? `Ans: ${sol}` : '';
+    });
+  }
+
+  document.getElementById('checkBtn').addEventListener('click', check);
+  document.getElementById('newBtn').addEventListener('click', ()=>{ hasCelebrated=false; render(); });
+  document.getElementById('revealBtn').addEventListener('click', ()=>{
+    const any = Array.from(document.querySelectorAll('.msg')).some(el=>el.textContent.startsWith('Ans:'));
+    reveal(!any);
+  });
+
+  // initial
+  render();
+})();
+</script>
+</body>
+</html>
