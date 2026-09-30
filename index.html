@@ -1,438 +1,503 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
-  <meta charset="UTF-8" />
-  <title>Standard Form (Scientific Notation) – Interactive Worksheet</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Confetti for celebration -->
-  <script async src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-  <style>
-    :root{
-      --accent:#1976d2; --light:#e3f2fd; --error:#e53935; --success:#43a047;
-      --field-w:4.2rem; --exp-w:2.6rem; --shadow:0 2px 4px rgba(0,0,0,.08);
-    }
-    *{box-sizing:border-box}
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0;padding:1rem;background:var(--light);}
-    h1{text-align:center;color:var(--accent);margin-bottom:.3rem}
-    p{max-width:900px;margin:.4rem auto;text-align:center}
-    .logo{position:absolute;top:12px;left:12px;width:140px;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.2);}
-    #scoreTop,#score{font-size:1.05rem;font-weight:600;text-align:center;color:#000;margin:.3rem auto}
-
-    /* Accordion */
-    details{max-width:900px;margin:1rem auto;border:2px solid var(--accent);border-radius:6px;background:#fff;box-shadow:var(--shadow);}
-    summary{padding:.6rem 1rem;font-weight:700;cursor:pointer;color:#1976d2;}
-    summary::-webkit-details-marker{display:none;}
-    .hint{padding:0 1.1rem 1rem;font-size:.96rem;line-height:1.5}
-    .hint ul{padding-left:1.2rem;margin:.4rem 0;}
-    .example{margin:.25rem 0;text-align:center;font-size:1.05rem;}
-    .sf{white-space:nowrap}
-    .sf sup{font-size:.85em}
-
-    /* Grid / Questions */
-    .grid{display:grid;gap:1rem;max-width:900px;margin:1rem auto;}
-    .problem{
-      position:relative; /* anchor for absolute-positioned marker */
-      display:grid;
-      grid-template-columns:1fr auto auto;
-      align-items:center;
-      gap:.6rem;
-      /* Extra right & bottom padding so exp box and marker never spill out */
-      padding:.75rem calc(1rem + var(--exp-w) + 1.4rem) 2.25rem 1rem;
-      background:#fff;border-radius:.6rem;box-shadow:var(--shadow);
-    }
-    .expr{font-size:1.25rem}
-    .type-tag{font-size:.7rem;font-weight:700;color:#fff;background:var(--accent);padding:.2rem .5rem;border-radius:999px;margin-right:.45rem;white-space:nowrap}
-
-    /* Answer Inputs */
-    .input-wrapper{display:flex;align-items:center;gap:.4rem}
-    .base-input{width:var(--field-w);text-align:center;border:1px solid #999;border-radius:4px;font-size:1.05rem;background:#fafafa;padding:.25rem 0;}
-    .base-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px #1976d222}
-
-    /* Standard-form input: a × 10^n */
-    .std-input{display:flex;align-items:center;gap:.4rem; margin-right:0;} /* keep it tidy */
-    .std-input .coeff{width:var(--field-w)}
-    .ten-block{position:relative;display:inline-flex;align-items:flex-start;line-height:1}
-    .ten-text{font-size:1.15rem;display:inline-block;padding:0 .15rem}
-    .exp-input{
-      position:absolute;
-      top:-1.05rem; left:calc(100% + .2rem); /* pulled a bit closer so it uses less right space */
-      width:var(--exp-w); text-align:center;
-      border:1px solid #999; border-radius:4px; font-size:.9rem; background:#fafafa; height:1.6rem
-    }
-    .exp-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px #1976d222}
-
-    /* Ordinary number input */
-    .ordinary{width:10rem}
-
-    /* Buttons */
-    button{padding:.5rem .9rem;font-size:.85rem;font-weight:700;border:none;border-radius:.35rem;cursor:pointer;transition:background .2s;user-select:none}
-    #checkBtn{background:var(--accent);color:#fff;} #checkBtn:hover{background:#0f5ca4}
-    #newBtn{background:#555;color:#fff;} #newBtn:hover{background:#333}
-    #revealBtn{background:#eee;} #revealBtn:hover{background:#ddd}
-
-    /* Marker (bottom-right of each card) */
-    .marker{
-      position:absolute;
-      bottom:.45rem; right:.6rem;
-      font-size:1.6rem;font-weight:800;min-width:1.8rem;text-align:center;
-      line-height:1;
-      pointer-events:none;
-    }
-    .ok{color:var(--success)} .no{color:var(--error)}
-    .msg{font-size:.85rem;color:#555}
-
-    /* Celebration */
-    .celebrate-banner{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--success);color:#fff;padding:.6rem 1rem;border-radius:999px;box-shadow:var(--shadow);z-index:9999;font-weight:800}
-
-    /* Print tweaks */
-    @media print{
-      #checkBtn, #newBtn, #revealBtn, details, .logo, #score, #scoreTop{display:none!important}
-      body{background:#fff}
-      .problem{page-break-inside:avoid}
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#193247">
+<meta name="description" content="Adaptive Foundation GCSE standard-form practice: exact friendly calculations, clear notation and honest practice records.">
+<title>Standard Form Studio · Foundation GCSE Maths</title>
+<style>:root{--ink:#193247;--muted:#566c7d;--bg:#f2f5f6;--paper:#fff;--soft:#edf3f5;--border:#d4e0e6;--accent:#006d64;--accent-bg:#e9f6f1;--warn:#825100;--warn-bg:#fff7e8;--error:#a1243e;--error-bg:#fff1f3;--shadow:0 7px 26px #14314708;--radius:18px;color-scheme:light;font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink)}[hidden]{display:none!important}button,input,select{font:inherit}button{cursor:pointer;border:1px solid transparent;border-radius:10px;min-height:44px;padding:.62rem .95rem;font-size:.85rem;line-height:1.4;font-weight:750}button:disabled{cursor:not-allowed;opacity:.5}button:not(:disabled):active{transform:translateY(1px)}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #dfaa40;outline-offset:3px}a{color:var(--accent);text-underline-offset:3px}h1,h2,h3,p{margin:0 0 1rem}h1{letter-spacing:-.04em;line-height:1.13}h2{line-height:1.3;letter-spacing:-.02em;font-size:1.35rem}h3{font-size:1.03rem}input,select{min-width:0;background:var(--paper);color:var(--ink);border:1px solid var(--border);border-radius:9px;padding:.65rem .75rem;width:100%;line-height:1.5}input{font-variant-numeric:tabular-nums}input:disabled,select:disabled{opacity:1;background:var(--soft);color:var(--ink)}button.primary{background:var(--accent);color:#fff}button.primary:hover:not(:disabled){filter:brightness(1.08)}button.quiet{background:var(--paper);color:var(--ink);border-color:var(--border)}button.quiet:hover:not(:disabled){background:var(--soft)}button.text-button{background:transparent;color:var(--muted);padding:.5rem .1rem;text-decoration:underline;text-underline-offset:4px;font-size:.78rem}.eyebrow{font-size:.65rem;letter-spacing:.13em;font-weight:850;color:var(--accent);margin-bottom:.7rem}.muted,.help{color:var(--muted)}.help{font-size:.79rem;line-height:1.7}.small{font-size:.75rem}.skip-link{position:absolute;top:8px;left:8px;z-index:100;transform:translateY(-160%);background:var(--paper);padding:.7rem}.skip-link:focus{transform:none}.header{max-width:1360px;margin:0 auto;padding:1.15rem 2rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:1rem}.brand{display:flex;gap:.75rem;align-items:center}.brand-mark{display:grid;place-items:center;background:#193247;color:#fff;border-radius:13px;width:46px;height:46px;font-size:1.35rem;font-weight:850;line-height:1}.brand-mark sup{font-size:.65rem}.brand strong{display:block;font-size:1.09rem;letter-spacing:-.025em}.brand small{display:block;color:var(--muted);font-size:.7rem}.header nav{display:flex;gap:.45rem;flex-wrap:wrap}.header nav button{font-size:.76rem;padding:.55rem .75rem}.main{max-width:1230px;margin:auto;padding:1.5rem 2rem 3rem}.start-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:1.65rem;align-items:stretch;margin-top:1rem}.hero{border-radius:22px;background:#193247;color:#fff;padding:2.4rem 2.5rem;min-height:440px;display:flex;flex-direction:column;justify-content:center}.hero .eyebrow{color:#a9dfd0}.hero h1{font-size:clamp(2.6rem,4vw,3.9rem);margin:1rem 0 1.1rem}.hero h1 span{color:#aadfca}.hero p{color:#cbdde7;max-width:390px;font-size:1rem;line-height:1.8}.hero-example{border-top:1px solid #486171;padding-top:1.5rem;margin-top:1.2rem;display:flex;gap:.85rem;align-items:center;flex-wrap:wrap;font-size:1.4rem;font-variant-numeric:tabular-nums}.hero-example .arrow{color:#a9dfd0}.hero-example small{display:block;flex-basis:100%;font-size:.68rem;color:#adc6d5}.panel{background:var(--paper);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}.start-card{padding:2.2rem;display:flex;flex-direction:column;justify-content:center}.start-card h2{font-size:1.7rem;margin:0 0 1rem}.start-card p{font-size:.96rem;line-height:1.8}.ready-note{border-left:3px solid var(--accent);background:var(--soft);padding:.85rem 1rem;margin:.7rem 0 1.3rem;color:var(--muted);font-size:.84rem}.start-button{width:100%;display:flex;justify-content:space-between;align-items:center;font-size:1.02rem;padding:.9rem 1.05rem;margin:.3rem 0 .8rem}.start-card .help{font-size:.76rem;margin-bottom:0}.session-bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.15rem}.session-stats{display:flex;gap:1.5rem}.stat{border-right:1px solid var(--border);padding-right:1.5rem}.stat:last-child{border:0;padding:0}.stat span{display:block;color:var(--muted);font-size:.65rem;letter-spacing:.025em}.stat strong{font-size:1.3rem;font-variant-numeric:tabular-nums;display:block;line-height:1.6}.question-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(330px,1fr);gap:1.25rem;align-items:start}.question-paper{padding:1.8rem 2rem;min-height:410px}.paper-heading{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:0 0 1.7rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}.paper-heading h2{font-size:1.38rem;margin:0}.paper-heading>span{font-size:.64rem;color:var(--muted);letter-spacing:.03em}.question-text{font-size:1.17rem;line-height:1.9}.question-text p{margin:0 0 1rem}.question-text b{font-weight:760}.question-ask{margin-top:1.2rem!important}.expression{padding:1.2rem .7rem;text-align:center;background:var(--soft);border:1px solid var(--border);border-radius:13px;font-size:1.48rem;line-height:2.2;margin:1rem 0 1.3rem;overflow-x:auto}.sf{white-space:nowrap;font-variant-numeric:tabular-nums;display:inline-block}.sf sup{font-size:.7em;vertical-align:super;line-height:0}.math-pair{display:inline;white-space:normal}.fraction{display:inline-flex;vertical-align:middle;flex-direction:column;text-align:center;line-height:1.8;max-width:100%}.fraction>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .35em .13em}.fraction>span:last-child{padding:.1em .35em 0}.table-scroll{overflow:auto;border:1px solid var(--border);border-radius:11px;margin:.9rem 0 1.2rem}table{width:100%;border-collapse:collapse;font-size:.92rem}th{text-align:left;background:var(--soft);font-size:.78rem;font-weight:750}th,td{padding:.65rem .9rem;border-bottom:1px solid var(--border)}tr:last-child td{border-bottom:0}td{font-variant-numeric:tabular-nums;line-height:1.7}.paper-tools{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1.5rem}.paper-foot{border-top:1px solid var(--border);padding-top:1rem;margin-top:1.35rem;color:var(--muted);font-size:.72rem;line-height:1.7}.answer-panel{padding:1.5rem}.answer-panel h2{font-size:1.16rem;margin-bottom:.5rem}.answer-panel>.help{margin-bottom:1.1rem}.answer-part{border:0;margin:0 0 1.15rem;padding:0;min-width:0}.answer-part>legend,.answer-part>label{display:block;font-size:.83rem;font-weight:750;margin-bottom:.55rem}.sf-entry{background:var(--soft);border:1px solid var(--border);border-radius:12px;padding:1rem .85rem 1rem;display:grid;grid-template-columns:minmax(90px,1fr) 54px minmax(67px,.62fr);gap:.5rem;align-items:end}.coefficient-field label,.power-field label{display:block;color:var(--muted);font-size:.67rem;margin-bottom:.35rem;font-weight:650}.coefficient-field input{font-size:1.42rem;min-height:53px;text-align:center;padding:.55rem .3rem}.power-field{align-self:start}.power-field input{text-align:center;font-size:1.12rem;padding:.28rem .15rem;min-height:40px}.times-ten{font-size:1.4rem;line-height:53px;text-align:center;white-space:nowrap}.sign-button{font-size:.7rem;padding:.2rem .4rem;min-height:28px;background:var(--paper);color:var(--muted);border-color:var(--border);margin:.45rem 0 0;width:100%}.sf-rule{font-size:.7rem;color:var(--muted);line-height:1.7;margin:.65rem 0}.ordinary-shell{display:flex;align-items:center;border:1px solid var(--border);border-radius:10px;background:var(--paper)}.ordinary-shell input{font-size:1.4rem;border:0;background:transparent}.ordinary-shell span{font-size:.84rem;color:var(--muted);padding:0 .7rem;white-space:nowrap}.choice-options{display:grid;gap:.55rem}.choice{display:flex;align-items:center;gap:.65rem;border:1px solid var(--border);border-radius:10px;padding:.7rem .8rem;cursor:pointer;font-size:.95rem;min-height:48px}.choice input{width:auto;accent-color:var(--accent);flex:none}.choice:has(input:checked){border-color:var(--accent);background:var(--accent-bg)}.choice span{min-width:0}.ordering{display:grid;gap:.55rem}.order-row{display:grid;grid-template-columns:20px 1fr;align-items:center;gap:.55rem}.order-row>span{font-size:.76rem;color:var(--muted)}.order-row select{font-size:.86rem}.check-button,.next-button{width:100%;font-size:.92rem;padding:.85rem 1rem;margin:.3rem 0 .6rem}.answer-end{border-top:1px solid var(--border);margin-top:.7rem;padding-top:.8rem;font-size:.69rem;color:var(--muted);line-height:1.7}.answer-actions{display:flex;justify-content:space-between;align-items:center;gap:.7rem;flex-wrap:wrap}.notice{font-size:.83rem;line-height:1.75;padding:.85rem 1rem;border-radius:10px;border:1px solid var(--border);background:var(--soft);margin:.7rem 0;overflow-wrap:anywhere}.notice.good{background:var(--accent-bg);color:var(--accent);border-color:var(--accent)}.notice.bad{color:var(--error);background:var(--error-bg);border-color:var(--error)}.notice.warn{color:var(--warn);background:var(--warn-bg)}.save-note{font-size:.68rem;text-align:right;color:var(--muted);margin:1.1rem 0}.footer{max-width:1230px;margin:auto;padding:1rem 2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:1rem;align-items:center;font-size:.67rem;color:var(--muted)}.footer button{font-size:.7rem}.results-header{padding:.75rem 0 1rem}.results-header h1{font-size:2.5rem}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}.metric{padding:1rem 1.25rem;background:var(--paper);border:1px solid var(--border);border-radius:13px}.metric strong{display:block;font-size:1.85rem;font-variant-numeric:tabular-nums}.metric span{font-size:.72rem;color:var(--muted)}.toolbar{display:flex;flex-wrap:wrap;gap:.6rem;margin:1.4rem 0}.review-card{background:var(--paper);border:1px solid var(--border);border-radius:13px;margin:.8rem 0;overflow:hidden}.review-card summary{cursor:pointer;padding:1rem 1.2rem;font-weight:700;font-size:.85rem;display:flex;justify-content:space-between;gap:.8rem}.review-card summary .status{font-size:.7rem;color:var(--muted)}.review-body{padding:0 1.2rem 1.25rem;font-size:.95rem}.review-body .question-text{font-size:.95rem}.review-body .expression{font-size:1.05rem}.solution{border-top:1px solid var(--border);padding-top:.85rem;margin-top:.85rem;line-height:1.8}.solution p{font-size:.91rem;margin:0 0 .7rem}.your-entry{font-size:.8rem;padding:.7rem;background:var(--soft);border-radius:8px;margin-top:.85rem;overflow-wrap:anywhere}dialog{border:1px solid var(--border);border-radius:18px;background:var(--paper);color:var(--ink);padding:0;width:calc(100% - 2rem);max-width:720px;max-height:91dvh;overflow:auto;box-shadow:0 24px 80px #061a3266}dialog::backdrop{background:#132738b8;backdrop-filter:blur(3px)}.dialog-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem 1.3rem;border-bottom:1px solid var(--border)}.dialog-header h2{font-size:1.2rem;margin:0}.close-button{padding:.2rem;width:40px;min-height:40px;font-size:1.2rem;background:var(--soft);color:var(--ink);border-color:var(--border)}.dialog-body{padding:1.2rem 1.35rem}.dialog-body p{font-size:.91rem;line-height:1.8}.dialog-body .help{font-size:.78rem}.method-steps{list-style:none;counter-reset:steps;padding:0;margin:1rem 0}.method-steps li{counter-increment:steps;display:flex;gap:.8rem;margin:.9rem 0;font-size:.94rem;line-height:1.8}.method-steps li:before{content:counter(steps);background:var(--accent-bg);color:var(--accent);border-radius:50%;display:grid;place-items:center;font-size:.76rem;font-weight:800;flex:none;width:26px;height:26px;margin-top:.25rem}.example-block{border:1px solid var(--border);border-radius:12px;padding:1rem;margin:.8rem 0;background:var(--soft)}.example-block .question-text{font-size:.93rem}.example-block .expression{font-size:1.05rem;background:var(--paper)}.native-details{border-top:1px solid var(--border);margin-top:1rem;padding-top:.8rem}.native-details summary{cursor:pointer;font-weight:700;font-size:.85rem}.native-details p{font-size:.83rem}.teacher-dialog{max-width:980px}.teacher-intro{display:flex;gap:1rem;justify-content:space-between;align-items:flex-start;background:var(--soft);border-left:4px solid var(--accent);padding:1rem;border-radius:10px;margin-bottom:1rem}.teacher-intro h3{margin-bottom:.25rem;font-size:1.3rem}.teacher-intro p{margin:0;font-size:.81rem}.teacher-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin:1rem 0}.teacher-metrics>div{border:1px solid var(--border);border-radius:9px;padding:.6rem}.teacher-metrics strong{display:block;font-size:1.4rem}.teacher-metrics span{color:var(--muted);font-size:.65rem}.tag{display:inline-block;padding:.15rem .4rem;border-radius:6px;border:1px solid var(--border);font-size:.66rem;white-space:nowrap}.tag.independent{color:var(--accent);border-color:var(--accent)}.tag.supported{color:var(--warn);border-color:var(--warn)}.tag.revisit{color:var(--error);border-color:var(--error)}.teacher-table td{font-size:.76rem}.teacher-table th{font-size:.7rem}.source-list p{font-size:.81rem;padding:.8rem 0;margin:0;border-top:1px solid var(--border)}.confirm-dialog{max-width:490px}.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:.75rem 1rem;font-size:.82rem;border-radius:9px;z-index:1000;max-width:min(90vw,650px);box-shadow:var(--shadow)}.toast:empty{display:none}
+body[data-theme=dark]{--ink:#e0edf5;--muted:#b0c4d2;--bg:#122331;--paper:#1b3041;--soft:#243e50;--border:#3c5668;--accent:#9bdfc9;--accent-bg:#244c42;--warn:#f6d298;--warn-bg:#443a27;--error:#ffabba;--error-bg:#492e3b;--shadow:0 7px 24px #0001;color-scheme:dark}body[data-theme=dark] button.primary{color:#16392e}body[data-theme=dark] .hero{border:1px solid #3c5668}body[data-theme=dark] .brand-mark{background:#315166}.sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:1020px){.header{padding:1rem 1.2rem}.main{padding:1.2rem 1.2rem 2.3rem}.start-grid{gap:1rem}.hero{padding:1.7rem}.start-card{padding:1.6rem}.question-grid{gap:1rem;grid-template-columns:minmax(0,1.3fr) minmax(310px,1fr)}.question-paper{padding:1.4rem}.answer-panel{padding:1.15rem}.question-text{font-size:1.12rem}.expression{font-size:1.27rem}}
+@media(max-width:760px){.header{flex-wrap:wrap;gap:.75rem;padding:1rem}.header nav{margin-left:auto}.brand strong{font-size:1rem}.brand small{font-size:.63rem}.main{padding:1rem .85rem 2rem}.start-grid{grid-template-columns:1fr;margin-top:.3rem}.hero{min-height:0;padding:1.55rem}.hero h1{font-size:2.55rem;margin:.5rem 0 1rem}.hero h1 br{display:none}.hero-example{display:none}.hero p{max-width:none;font-size:.9rem;margin-bottom:0}.hero .eyebrow{font-size:.6rem}.start-card{padding:1.4rem}.start-card h2{font-size:1.45rem}.start-card p{font-size:.88rem}.question-grid{grid-template-columns:1fr}.question-paper{min-height:0;padding:1.2rem}.paper-heading{margin-bottom:1.05rem;padding-bottom:.8rem}.paper-heading h2{font-size:1.23rem}.question-text{font-size:1.09rem}.paper-tools{margin-top:1rem}.paper-foot{margin-top:1rem;padding-top:.8rem}.answer-panel{padding:1.25rem}.session-bar{gap:.55rem}.session-stats{gap:.8rem}.stat{padding-right:.8rem}.stat span{font-size:.6rem}.stat strong{font-size:1.1rem}.session-bar>button{font-size:.71rem;padding:.5rem .65rem}.metrics{grid-template-columns:1fr 1fr;gap:.6rem}.metric{padding:.8rem 1rem}.metric strong{font-size:1.55rem}.results-header h1{font-size:2rem}.save-note{text-align:left}.footer{flex-direction:column;align-items:flex-start;gap:.3rem;padding:1rem}.teacher-metrics{grid-template-columns:1fr 1fr}.dialog-header{padding:1rem}.dialog-body{padding:1rem}.teacher-table td:first-child{min-width:160px}.expression{font-size:1.22rem}.sf-entry{grid-template-columns:minmax(90px,1.2fr) 62px minmax(68px,.8fr)}.paper-heading>span{font-size:.6rem}.review-card summary{padding:.9rem}.review-body{padding:0 .9rem 1rem}.toolbar button{font-size:.78rem}}
+@media(max-width:370px){.header nav{width:100%;justify-content:flex-end}.stat span{font-size:.55rem}.session-stats{gap:.6rem}.stat{padding-right:.6rem}.session-bar>button{max-width:84px}.expression{font-size:1.1rem}.sf-entry{gap:.25rem;padding:.85rem .7rem;grid-template-columns:minmax(80px,1fr) 53px minmax(62px,.7fr)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+@media print{body{background:#fff!important;color:#111!important}.header,.footer,.toolbar,.session-bar,.paper-tools,.paper-foot,.save-note,.answer-panel,dialog,.toast,.notice,button,.skip-link{display:none!important}.main{max-width:none;padding:0}.panel,.metric,.review-card{background:white!important;color:#111!important;box-shadow:none;border-color:#bbb;border-radius:0}.question-grid{display:block}.question-paper{min-height:0}.expression{background:white!important;border-color:#bbb;color:#111}.review-body{display:block!important}.review-card{break-inside:avoid}.results-header h1{font-size:22pt}.question-text{font-size:12pt}.review-card .question-text{font-size:10pt}.tag,.muted,.help,th,td,.metric span,.status{color:#111!important}.table-scroll{overflow:visible}.metrics{gap:.4rem}.source-list{display:none}}
+</style>
 </head>
-<body>
-  <img src="https://lirp.cdn-website.com/b085c470/dms3rep/multi/opt/Bucks%2BCollege%2BGroup-e5af1b68-1920w.jpg" alt="Bucks College Group logo" class="logo">
-  <h1>Standard Form (Scientific Notation)</h1>
-  <p id="scoreTop"></p>
-
-  <!-- Hint accordion (HTML, no TeX) -->
-  <details>
-    <summary>Need a hint? (click to expand)</summary>
-    <div class="hint">
-      <p><b>Standard form</b> means writing a number as <span class="sf">a × 10<sup>n</sup></span> where <span class="sf">1 ≤ a &lt; 10</span> and <em>n</em> is an integer.</p>
-
-      <strong>Adding in standard form</strong>
-      <ul>
-        <li>Make the powers of 10 the same (rewrite one number if needed).</li>
-        <li>Add the coefficients and renormalise so <span class="sf">1 ≤ a &lt; 10</span>.</li>
-      </ul>
-      <div class="example"><span class="sf">(3.2 × 10<sup>5</sup>) + (7.1 × 10<sup>5</sup>) = 10.3 × 10<sup>5</sup> = 1.03 × 10<sup>6</sup></span></div>
-
-      <strong>Subtracting in standard form</strong>
-      <ul>
-        <li>Match powers of 10, subtract coefficients, renormalise.</li>
-      </ul>
-      <div class="example"><span class="sf">(8.4 × 10<sup>4</sup>) − (2.9 × 10<sup>4</sup>) = 5.5 × 10<sup>4</sup></span></div>
-
-      <strong>Multiplying in standard form</strong>
-      <ul>
-        <li>Multiply coefficients, <em>add</em> exponents, renormalise.</li>
-      </ul>
-      <div class="example"><span class="sf">(6 × 10<sup>3</sup>) × (2.5 × 10<sup>4</sup>) = 15 × 10<sup>7</sup> = 1.5 × 10<sup>8</sup></span></div>
-
-      <strong>Dividing in standard form</strong>
-      <ul>
-        <li>Divide coefficients, <em>subtract</em> exponents, renormalise.</li>
-      </ul>
-      <div class="example"><span class="sf">(9 × 10<sup>6</sup>) ÷ (3 × 10<sup>2</sup>) = 3 × 10<sup>4</sup></span></div>
-
-      <strong>Ordinary → Standard</strong>
-      <ul>
-        <li>Move the decimal so the first digit is non-zero; count moves for <em>n</em>.</li>
-      </ul>
-      <div class="example"><span class="sf">0.00057 = 5.7 × 10<sup>−4</sup> &nbsp; &nbsp; 18,400,000 = 1.84 × 10<sup>7</sup></span></div>
-
-      <strong>Standard → Ordinary</strong>
-      <ul>
-        <li>Shift the decimal point: right for positive <em>n</em>, left for negative <em>n</em>.</li>
-      </ul>
-      <div class="example"><span class="sf">2.3 × 10<sup>−3</sup> = 0.0023 &nbsp; &nbsp; 7.5 × 10<sup>4</sup> = 75,000</span></div>
-    </div>
-  </details>
-
-  <p>Enter answers in <em>standard form</em> using the boxes: coefficient next to “×10” and the small power box on the top-right. For “Standard → Ordinary”, enter a normal number (you may use <code>e</code>-notation like <code>1.2e5</code>).</p>
-
-  <div id="problems" class="grid"></div>
-
-  <div style="text-align:center;margin-top:.5rem;display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap">
-    <button id="checkBtn">Check answers</button>
-    <button id="revealBtn">Reveal answers</button>
-    <button id="newBtn">New questions</button>
-  </div>
-  <p id="score"></p>
-
-  <div id="celebrate" class="celebrate-banner" hidden>Perfect score! 🎉 Well done!</div>
-
-<script>
-(function(){
-  const $grid = document.getElementById('problems');
-  const TOTAL = 15;
-
-  // --- Utilities ---
-  const randi=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
-  const choice=arr=>arr[randi(0,arr.length-1)];
-  const roundSig=(x,s=3)=>{ if(x===0) return 0; const n=Math.floor(Math.log10(Math.abs(x))); const f=10**(s-1-n); return Math.round(x*f)/f; };
-  const nearlyEqual=(a,b)=>{
-    if(!isFinite(a) || !isFinite(b)) return false;
-    if(a===b) return true;
-    const diff=Math.abs(a-b), scale=Math.max(1,Math.abs(a),Math.abs(b));
-    return diff/scale<1e-6;
-  };
-
-  function toStandardFromValue(val){
-    if(val===0) return {a:0,n:0,value:0};
-    let n = Math.floor(Math.log10(Math.abs(val)));
-    let a = val / 10**n;
-    while(Math.abs(a)>=10){ a/=10; n++; }
-    while(Math.abs(a)<1){ a*=10; n--; }
-    return {a, n, value: a*10**n};
+<body data-theme="light">
+<a class="skip-link" href="#main">Skip to activity</a>
+<header class="header"><div class="brand"><span class="brand-mark" aria-hidden="true"><span>10<sup>n</sup></span></span><div><strong>Standard Form Studio</strong><small>Foundation GCSE Mathematics · Eduqas-style practice</small></div></div><nav aria-label="Activity tools"><button class="quiet" id="teacherBtn" hidden>Teacher</button><button class="quiet" id="themeBtn" aria-pressed="false">Dark mode</button></nav></header>
+<main class="main" id="main">
+<div id="storageNotice" class="notice warn" role="status" hidden></div>
+<div id="errorNotice" class="notice bad" role="alert" hidden></div>
+<section id="startView" aria-labelledby="startTitle"><div class="start-grid"><div class="hero"><p class="eyebrow">SMALL SHIFTS. BIG DIFFERENCE.</p><h1 id="startTitle">Big numbers.<br><span>Clear thinking.</span></h1><p>Make sense of large and small values.<br>Read carefully. Work on paper. Check your answer.</p><div class="hero-example"><span>36,000</span><span class="arrow">↔</span><span class="sf">3.6 × 10<sup>4</sup></span><small>The same value. A different way to write it.</small></div></div><div class="panel start-card"><h2>One question at a time.</h2><p>You’ll start with a straightforward question.<br>The next questions respond to how you get on.</p><div class="ready-note">Keep a pen and paper beside you.<br>All calculation answers are exact: no rounding is needed.<br>In estimate questions, follow the rounding instruction.</div><button class="primary start-button" id="startBtn">Start <span aria-hidden="true">→</span></button><p class="help" id="startNote">No time limit. No setup menus.<br>Help explains the method without giving away your answer.</p></div></div></section>
+<section id="sessionView" aria-label="Practice activity" hidden><div class="session-bar"><div class="session-stats"><div class="stat"><span>Correct</span><strong id="correctCount">0</strong></div><div class="stat"><span>Independent</span><strong id="independentCount">0</strong></div><div class="stat"><span>Practice points</span><strong id="pointsCount">0</strong></div></div><button class="quiet" id="finishBtn">Finish & review</button></div>
+<div class="question-grid"><article class="panel question-paper" aria-labelledby="questionTitle"><div class="paper-heading"><h2 id="questionTitle" tabindex="-1">Question 1</h2><span>SHOW YOUR WORKING</span></div><div id="questionBody" class="question-text"></div><div class="paper-tools"><button class="quiet" id="helpBtn">Help with the method</button></div><div class="paper-foot">Use paper for your working.<br>Give the answer in the form requested in the question.</div></article><aside class="panel answer-panel" aria-labelledby="answerTitle"><h2 id="answerTitle">Your answer</h2><p class="help" id="answerNote"></p><form id="answerForm" novalidate><div id="answerFields"></div><div class="notice" id="feedback" hidden role="status" aria-live="polite"></div><button type="submit" class="primary check-button" id="checkBtn">Check answer</button><button type="button" class="primary next-button" id="nextBtn" hidden>Next question →</button><div class="answer-actions"><button type="button" class="text-button" id="easierBtn">I’m stuck — give me a fresh question</button></div></form><div class="answer-end">Exact answers, not “close enough”.<br>A wrong power of ten changes the value.<br>Practice points are not GCSE marks.</div></aside></div><p class="save-note" id="saveNote">Your progress stays on this device.</p></section>
+<section id="resultsView" aria-labelledby="resultsTitle" hidden><div class="results-header"><p class="eyebrow">YOUR PRACTICE</p><h1 id="resultsTitle" tabindex="-1">See what you’ve learned.</h1><p id="resultsNote" class="help"></p></div><div class="metrics" id="metrics"></div><div class="toolbar"><button class="primary" id="continueBtn">Keep practising</button><button class="quiet" id="newBtn">Start a new round</button><button class="quiet" id="exportBtn">Export results</button><button class="quiet" id="printBtn">Print review</button></div><p class="help">Reviewed questions are closed and cannot earn further points.<br>Questions left blank do not expose a model answer. Your paper methods should be checked by your teacher.</p><h2>Question review</h2><div id="reviews"></div></section>
+</main>
+<footer class="footer"><span>Independent resource. Not produced or endorsed by Eduqas.</span><button id="aboutBtn" class="text-button">About & sources</button></footer>
+<dialog id="helpDialog" aria-labelledby="helpTitle"><div class="dialog-header"><h2 id="helpTitle">A little help</h2><button class="close-button" data-close="helpDialog" aria-label="Close help">×</button></div><div class="dialog-body"><p class="help">Using this help is recorded as supported work. Your current answer stays private.</p><ol id="hintSteps" class="method-steps"></ol><details id="exampleDetails" class="native-details"><summary>A worked example with different numbers</summary><div id="exampleBody"></div></details></div></dialog>
+<dialog id="teacherDialog" class="teacher-dialog" aria-labelledby="teacherTitle"><div class="dialog-header"><h2 id="teacherTitle">Teacher glance</h2><button class="close-button" data-close="teacherDialog" aria-label="Close teacher view">×</button></div><div class="dialog-body"><div id="teacherSummary"></div><div id="teacherTable"></div><details class="native-details"><summary>How the practice responds</summary><p>Two independent first-check successes on different variations at the current demand, including at least one numeric answer, unlock the next demand. Supported successes count as correct practice but do not, by themselves, unlock harder work. Earlier untested variations return between demanding questions. Once the available highest-demand families have been sampled, unseen related applications are preferred to repeating those same families.</p><p>After a question is closed unsuccessfully, a related prerequisite and a later recheck are queued. Repeated difficulty lowers the working demand without deleting earlier achievements. There is no speed penalty and no learner-facing level display.</p><p>“Independent” means first-check success without opening in-app help. It is not proof that no outside help was used. This is a local progress view, not an authenticated assessment record or a class dashboard.</p></details></div></dialog>
+<dialog id="aboutDialog" aria-labelledby="aboutTitle"><div class="dialog-header"><h2 id="aboutTitle">About this activity</h2><button class="close-button" data-close="aboutDialog" aria-label="Close information">×</button></div><div class="dialog-body"><p>52 randomised variations covering the six skills in the original worksheet: conversions in both directions and addition, subtraction, multiplication and division. There are also comparisons, ordering, correcting notation, selecting data, ranges, unit changes, exact percentages, estimates and multi-step problems.</p><p>All generated calculation values are positive, exact whole numbers or terminating decimals. Standard-form answers have a first factor of at most three decimal places and a power from −8 to 12, with extended powers reserved for later questions. Ordinary-number answers have no more than seven decimal places. This keeps arithmetic manageable; it is a classroom design choice, not a restriction on examination questions.</p><p>Generated powers zero and one appear only in two multiple-choice checks. They are excluded from other questions, their standard-form answers, and their displayed worked methods, including different-number examples. This is a classroom selection rule: these powers are still mathematically valid in standard form and are not excluded by the examination specification.</p><p>Standard-form answers must have the correct value and the required notation. A first factor from 1 to less than 10 and an integer power are required. Trailing zeros are accepted. Ordinary-number questions require an ordinary decimal, not calculator e-notation.</p><p>No bulk answer-reveal control exists. Help gives methods and different-number examples. A maximum of three distinct, valid checks prevents endless answer guessing. A question must be closed before its solution is available in the final review; blank skipped questions never reveal a solution there.</p><p>A standalone HTML file cannot provide tamper-proof examination security against developer tools, altered local storage or outside help. No passwords or answer-key obfuscation are presented as secure protection. Scoring here supports supervised learning, not high-stakes assessment.</p><div class="source-list"><p><a href="https://www.eduqas.co.uk/media/cosjcbs1/eduqas-gcse-maths-spec-from-2015-e.pdf" target="_blank" rel="noopener noreferrer">Eduqas GCSE Mathematics specification</a><br>Foundation FN9: calculate with and interpret standard form. FN1, FN13–15 and FR1 support ordering, units and estimates.</p><p><a href="https://revisionmaths.com/sites/default/files/revisionmaths/documents/EMA24P1.pdf" target="_blank" rel="noopener noreferrer">Summer 2024 Foundation Component 1, Question 29</a><br>Division with a negative power in the denominator, including an answer beyond a power of 8, and addition of values with different powers. Official paper hosted by Revision Maths.</p><p><a href="https://www.eduqas.co.uk/media/uq2dcsqv/eduqas-gcse-mathematics-final-report-s24.pdf" target="_blank" rel="noopener noreferrer">Summer 2024 examiner report</a><br>Foundation Component 1 Q29: index signs, ordinary-number methods and correct standard-form answers.</p><p><a href="https://revisionmaths.com/sites/default/files/revisionmaths/documents/EQM31s23-c300u10-1.pdf" target="_blank" rel="noopener noreferrer">Summer 2023 Foundation Component 1, Question 23</a><br>Estimating a percentage of a quantity given in standard form. These new estimate questions explicitly specify how to round.</p></div><p class="help">Version 2. Sources rechecked 29 September 2026. Newly written questions, not copied papers or a full-paper simulator. Not every variation is claimed to reproduce a particular past-paper question.</p><p class="help">The app has no external scripts and sends no learner data to a server. This device’s browser storage may be disabled or cleared. Export a review for your own record.</p></div></dialog>
+<dialog id="confirmDialog" class="confirm-dialog" aria-labelledby="confirmTitle"><div class="dialog-header"><h2 id="confirmTitle">Please confirm</h2><button class="close-button" data-close="confirmDialog" aria-label="Cancel">×</button></div><div class="dialog-body"><p id="confirmText"></p><div class="toolbar"><button id="confirmYes" class="primary">Continue</button><button data-close="confirmDialog" class="quiet">Cancel</button></div></div></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<noscript><p class="notice bad">JavaScript is needed to use this activity.</p></noscript>
+<script>(()=>{
+/* Standard Form Studio — exact arithmetic, deterministic questions, irreversible scoring.
+   The browser uses this module only inside a private closure. Node exports are for tests. */
+'use strict';
+const StandardFormEngine = (() => {
+const VERSION=2, MAX_ATTEMPTS=3, MAX_QUESTIONS=2000;
+// Powers 0 and +1 are taught only in the two dedicated multiple-choice families.
+// This is a classroom selection rule, not a change to the definition of standard form.
+const MC_POWER_EXCEPTIONS=new Set(['zero_one','zero_one_reverse']);
+class CandidateRejected extends Error {}
+const SPECS=[
+ ['to_sf_large','Large number → standard form',1,null],
+ ['to_ord_large','Standard form → large ordinary number',1,'to_sf_large'],
+ ['identify','Recognise standard form',1,null],
+ ['to_sf_small','Small number → standard form',2,'to_sf_large'],
+ ['to_ord_small','Standard form → small ordinary number',2,'to_ord_large'],
+ ['zero_one','Powers zero and one',2,'to_ord_large'],
+ ['internal_zero','Keep zeros between significant digits',2,'to_sf_large'],
+ ['normalise_large','Coefficient too large',2,'to_sf_large'],
+ ['normalise_small','Coefficient smaller than one',3,'to_sf_small'],
+ ['compare_same','Compare values with the same power',2,'to_ord_large'],
+ ['compare_powers','Compare different powers, not just coefficients',3,'compare_same'],
+ ['order_small','Order small positive values',3,'compare_powers'],
+ ['add_same','Add with the same power',2,'to_ord_large'],
+ ['sub_same','Subtract with the same power',2,'add_same'],
+ ['mul_simple','Multiply coefficients and powers',2,'to_sf_large'],
+ ['div_simple','Divide coefficients and powers',2,'to_sf_large'],
+ ['add_carry','Addition requiring a new power',3,'add_same'],
+ ['sub_normalise','Subtraction with a result below one part',3,'sub_same'],
+ ['add_different','Add different powers',4,'add_carry'],
+ ['sub_different','Subtract different powers',4,'sub_normalise'],
+ ['mul_normalise','Multiplication requiring standard form',3,'mul_simple'],
+ ['mul_negative','Multiplication with negative powers',4,'mul_normalise'],
+ ['div_normalise','Division with a coefficient below one',3,'div_simple'],
+ ['div_negative','Division by a negative power',4,'div_normalise'],
+ ['table_total','Select and total data from a table',4,'add_different'],
+ ['table_difference','Difference, not total, from a table',4,'sub_different'],
+ ['mass_group','Mass of a group of identical objects',4,'mul_normalise'],
+ ['units','Change the unit as well as the notation',4,'to_sf_small'],
+ ['capacity_count','How many complete equal portions',4,'div_simple'],
+ ['times_larger','How many times as large',4,'div_simple'],
+ ['estimate_percent','Estimate a percentage of a large quantity',5,'mul_normalise'],
+ ['two_step','Combine before sharing equally',5,'add_different'],
+ ['fix_error','Correct a place-value error',3,'normalise_small'],
+ ['missing_factor','Find a missing factor',5,'div_negative'],
+ ['mass_to_kg','Total mass with a final unit change',5,'mass_group'],
+ ['order_mixed','Order ordinary and standard-form values',4,'compare_powers'],
+ ['zero_one_reverse','Recognise the power for a value between 1 and 100',2,'to_ord_large'],
+ ['add_small_gap','Add small quantities with different powers',4,'add_different'],
+ ['sub_small_gap','Subtract small quantities with different powers',4,'sub_different'],
+ ['mul_mixed','Multiply a large quantity by a small quantity',4,'mul_normalise'],
+ ['div_both_negative','Divide two small quantities',4,'div_negative'],
+ ['div_small_result','Division giving a small result',4,'div_normalise'],
+ ['div_exam_large','Negative denominator power with an extended result power',5,'div_negative'],
+ ['three_terms','Combine three quantities in the stated order',5,'add_different'],
+ ['fraction_products','A product above a fraction bar',5,'div_negative'],
+ ['cost_many','Item costs in pence; total required in pounds',4,'mass_group'],
+ ['production_rate','Multiply a steady rate by a stated duration',4,'mul_simple'],
+ ['percent_exact','Calculate an exact fraction or percentage of a quantity',4,'mul_normalise'],
+ ['table_range','Range, not total, in a data table',4,'table_difference'],
+ ['per_item_mass','Mass of one item, including a unit change',5,'mass_to_kg'],
+ ['remaining_capacity','A starting quantity minus repeated removals',5,'two_step'],
+ ['method_choice','Identify a valid addition method',3,'add_same']
+];
+const VARIANTS=SPECS.map(([id,label,tier,parent])=>({id,label,tier,parent}));
+const BYID=Object.fromEntries(VARIANTS.map(v=>[v.id,v]));
+const abs=x=>x<0n?-x:x;
+function gcd(a,b){a=abs(a);b=abs(b);while(b){[a,b]=[b,a%b];}return a;}
+function F(n,d=1n){n=BigInt(n);d=BigInt(d);if(!d)throw Error('Zero denominator');if(d<0n){n=-n;d=-d;}const g=gcd(n,d);return {n:n/g,d:d/g};}
+function decimal(s){s=String(s);if(!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(s))throw Error('Not a decimal');let sign=1n;if(s[0]==='-'){sign=-1n;s=s.slice(1);}else if(s[0]==='+')s=s.slice(1);const [a,b='']=s.split('.');return F(sign*BigInt((a||'0')+b),10n**BigInt(b.length));}
+function plus(a,b){return F(a.n*b.d+b.n*a.d,a.d*b.d);}
+function minus(a,b){return F(a.n*b.d-b.n*a.d,a.d*b.d);}
+function times(a,b){return F(a.n*b.n,a.d*b.d);}
+function over(a,b){return F(a.n*b.d,a.d*b.n);}
+function eq(a,b){return a.n===b.n&&a.d===b.d;}
+function cmp(a,b){const d=a.n*b.d-b.n*a.d;return d<0n?-1:d>0n?1:0;}
+function power10(n){return n>=0?F(10n**BigInt(n)):F(1n,10n**BigInt(-n));}
+function dec(a){let d=a.d,k2=0,k5=0;while(d%2n===0n){d/=2n;k2++;}while(d%5n===0n){d/=5n;k5++;}if(d!==1n)throw Error('Non-terminating decimal rejected');const p=Math.max(k2,k5);let i=abs(a.n)*(10n**BigInt(p)/a.d),s=i.toString().padStart(p+1,'0');if(p)s=s.slice(0,-p)+'.'+s.slice(-p);s=s.replace(/(\.\d*?)0+$/,'$1').replace(/\.$/,'');return (a.n<0n?'-':'')+s;}
+function standard(a){if(a.n<=0n)throw Error('Positive values required');const raw=dec(a),[whole,frac='']=raw.split('.');let digits,e;if(whole!=='0'){digits=whole+frac;e=whole.length-1;}else{const j=frac.search(/[1-9]/);digits=frac.slice(j);e=-j-1;}digits=digits.replace(/0+$/,'');return {coefficient:digits.length===1?digits:digits[0]+'.'+digits.slice(1),exponent:e};}
+function nice(s){s=String(s);const [a,b]=s.split('.');return a.replace(/\B(?=(\d{3})+(?!\d))/g,',')+(b?'.'+b:'');}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sf=(c,e)=>`<span class="sf">${esc(c)} × 10<sup>${e<0?'−'+(-e):e}</sup></span>`;
+function sfValue(a){const s=standard(a);return sf(s.coefficient,s.exponent);}
+const lit=s=>({val:String(s)}), ten=(c,e)=>({val:String(c),power:e}), op=(symbol,a,b)=>({op:symbol,args:[a,b]});
+function evaluate(x){if(x.val!==undefined)return times(decimal(x.val),power10(x.power||0));const [a,b]=x.args.map(evaluate);return ({'+':plus,'-':minus,'*':times,'/':over})[x.op](a,b);}
+function maths(x){if(x.val!==undefined)return x.power!==undefined?sf(x.val,x.power):esc(nice(x.val));const [a,b]=x.args;if(x.op==='/')return `<span class="fraction"><span>${maths(a)}</span><span>${maths(b)}</span></span>`;return `<span class="math-pair">(${maths(a)}) ${({'*':'×','-':'−','+':'+'})[x.op]} (${maths(b)})</span>`;}
+function rng(seed){let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296;};}
+function hash(a,b){let t=(a^Math.imul(b+1,0x9e3779b9))>>>0;t=Math.imul(t^t>>>16,0x85ebca6b);t=Math.imul(t^t>>>13,0xc2b2ae35);return (t^t>>>16)>>>0;}
+function shuffle(xs,r){const a=[...xs];for(let i=a.length-1;i>0;i--){let j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const NAMES=['Amira','Ben','Chloe','Daniel','Ellie','Faisal','Grace','Hassan','Isla','Jasmine','Kai','Liam','Maya','Noah','Priya','Ruby','Sam','Zara'];
+function make(id,seed){
+ const spec=BYID[id];if(!spec)throw Error('Unknown question');const r=rng(seed),ri=(a,b)=>a+Math.floor(r()*(b-a+1)),pick=a=>a[ri(0,a.length-1)];
+ const name=pick(NAMES);let lines=[],expression=null,table=null,ask='',parts=[],hints=[],solution=[],facts={},e,a,b,x,y;
+ const tenth=()=>dec(F(ri(12,89),10)),coef=()=>dec(F(ri(101,989),100));
+ const add=(label,type,expr,unit='')=>{const value=evaluate(expr),s=standard(value);parts.push({label,type,unit,value:dec(value),...s,expr});return value;};
+ const basic=(expr,method,type='sf')=>{expression=expr;ask=type==='sf'?'Give your answer in standard form.':'Give your answer as an ordinary number.';add('Your answer',type,expr);hints=method;const val=evaluate(expr);solution=[`${maths(expr)} = ${esc(nice(dec(val)))}.`,type==='sf'?`In standard form: ${sfValue(val)}.`:'An ordinary number is written without a power of ten.'];};
+ if(['to_sf_large','to_ord_large','to_sf_small','to_ord_small','internal_zero'].includes(id)){
+  e=id.includes('small')?-ri(2,5):ri(2,6);a=tenth();if(id==='internal_zero'){a=`${ri(1,9)}.0${ri(1,9)}`;e=pick([-4,-3,4,5,6]);}
+  const value=evaluate(ten(a,e)),toOrd=id.startsWith('to_ord');
+  if(toOrd){lines=[`Write ${sf(a,e)} as an ordinary number.`];add('Ordinary number','ordinary',ten(a,e));solution=[`${sf(a,e)} = ${esc(nice(dec(value)))}.`];}
+  else{lines=[`Write <b>${esc(nice(dec(value)))}</b> in standard form.`];add('Your answer','sf',lit(dec(value)));solution=[`${esc(nice(dec(value)))} = ${sf(a,e)}.`];}
+  hints=['The first number in standard form is at least 1 and less than 10.','A positive power of ten makes a value larger; a negative power makes it smaller. Count place-value shifts carefully.'];
+ }else if(id==='zero_one'||id==='zero_one_reverse'){
+  a=coef();e=pick([0,1]);const value=evaluate(ten(a,e));
+  const options=e===0?[a,dec(times(decimal(a),F(10))),dec(over(decimal(a),F(10))),'0']:[dec(value),a,dec(times(decimal(a),F(100))),dec(over(decimal(a),F(10)))];
+  if(id==='zero_one'){
+   lines=[`Which ordinary number is equal to ${sf(a,e)}?`];ask='Select one answer.';
+   const opts=shuffle(options,r);parts=[{type:'choice',label:'Ordinary number',options:opts.map(z=>esc(nice(z))),answer:opts.indexOf(dec(value))}];
+  }else{
+   lines=[`Which expression is the standard form of <b>${esc(nice(dec(value)))}</b>?`];ask='Select one expression.';
+   const exps=shuffle([-1,0,1,2],r);parts=[{type:'choice',label:'Standard form',options:exps.map(n=>sf(a,n)),answer:exps.indexOf(e)}];
   }
-
-  function normalise(a,n){
-    if(a===0) return {a:0,n:0};
-    while(Math.abs(a)>=10){ a/=10; n++; }
-    while(Math.abs(a)>0 && Math.abs(a)<1){ a*=10; n--; }
-    return {a, n};
+  facts={kind:'zero_one',coefficient:a,exponent:e,value:dec(value)};
+  hints=['Think about what the indicated power of ten means.','Keep the first factor unchanged until you have worked out that power.'];
+  solution=[e===0?'Ten to the power zero is 1, not 0.':'Ten to the power one is 10.',`${sf(a,e)} = ${nice(dec(value))}.`];
+ }else if(id==='identify'){
+  a=tenth();e=ri(3,5);const correct=sf(a,e),opts=[correct,sf(dec(times(decimal(a),F(10))),e-1),sf(dec(over(decimal(a),F(10))),e+1),`${esc(a)} × 8<sup>${e}</sup>`];
+  lines=['Which of these expressions is written in standard form?'];ask='Select one expression.';const choices=shuffle(opts,r);parts=[{type:'choice',label:'Expression',options:choices,answer:choices.indexOf(correct)}];facts={kind:'valid_form',a,e};
+  hints=['Check both requirements: a number from 1 up to (but not including) 10, multiplied by an integer power of 10.'];solution=[`${correct} satisfies both requirements. Equivalent values do not automatically have the required standard-form notation.`];
+ }else if(id==='normalise_large'||id==='normalise_small'||id==='fix_error'){
+  a=coef();e=pick([-5,-4,-3,-2,3,4,5]);const small=id==='normalise_small'||(id==='fix_error'&&r()<.5),shift=small?-1:1;
+  x=ten(dec(times(decimal(a),power10(shift))),e-shift);
+  if(id==='fix_error'){lines=[`${name} says ${maths(x)} is already in standard form.`,'The value is correct, but the way it is written needs changing.'];ask='Write the same value in correct standard form.';add('Correct standard form','sf',x);}
+  else {lines=[`Write ${maths(x)} in standard form.`];add('Your answer','sf',x);}
+  hints=['The first factor must be at least 1 and less than 10.','Keep the overall value unchanged: when one factor is multiplied by 10, the other must be divided by 10.'];solution=[`${maths(x)} = ${sf(a,e)}.`];
+ }else if(id==='compare_same'||id==='compare_powers'){
+  e=pick([-5,-4,-3,2,3,4,5]);a=dec(F(ri(11,39),10));b=dec(F(ri(51,98),10));x=ten(a,id==='compare_same'?e:e+1);y=ten(b,e);const items=shuffle([x,y],r);expression=null;lines=[`Compare ${maths(items[0])} and ${maths(items[1])}.`];ask='Choose the correct symbol for the box.';
+  table={headers:['Left value','□','Right value'],rows:[[maths(items[0]),'?',maths(items[1])]]};const c=cmp(evaluate(items[0]),evaluate(items[1])),sym=c<0?'&lt;':'&gt;';parts=[{type:'choice',label:'Comparison symbol',options:['&lt;','=','&gt;'],answer:c<0?0:2}];facts={kind:'compare',values:items};
+  hints=['Compare the full values, not just the first numbers.','For positive numbers in standard form, compare the powers first; only compare first factors when the powers match.'];solution=[`${maths(items[0])} ${sym} ${maths(items[1])}.`,`The ordinary values are ${nice(dec(evaluate(items[0])))} and ${nice(dec(evaluate(items[1])))}.`];
+ }else if(id==='order_small'||id==='order_mixed'){
+  const base=id==='order_small'?-5:pick([-5,2]);let vals=[ten(tenth(),base),ten(tenth(),base+1),ten(tenth(),base+2),ten(tenth(),base+3)];vals=shuffle(vals,r);
+  if(vals.every((v,i)=>!i||cmp(evaluate(vals[i-1]),evaluate(v))<0))[vals[0],vals[1]]=[vals[1],vals[0]];
+  const entries=vals.map((v,i)=>({key:String(i),label:id==='order_mixed'&&i%2===0?nice(dec(evaluate(v))):maths(v)}));
+  lines=['Put these values in order, starting with the smallest.'];table={headers:['Value'],rows:entries.map(z=>[z.label])};parts=[{type:'order',label:'Smallest → largest',options:entries,answer:vals.map((_,i)=>i).sort((i,j)=>cmp(evaluate(vals[i]),evaluate(vals[j]))).map(String)}];facts={kind:'order',values:vals};
+  hints=['First compare the powers of ten. Negative powers need careful ordering.','A number close to zero can still be positive. Write ordinary values on paper when this helps.'];solution=[parts[0].answer.map(i=>entries[Number(i)].label).join(' &lt; ')+'.'];
+ }else if(['add_same','sub_same','add_carry','sub_normalise','add_different','sub_different'].includes(id)){
+  e=pick([-4,-3,-2,2,3,4,5]);let ai,bi,e2=e;
+  if(id==='add_same'){ai=ri(12,40);bi=ri(11,49);}
+  if(id==='sub_same'){ai=ri(61,98);bi=ri(11,40);}
+  if(id==='add_carry'){ai=ri(61,95);bi=ri(45,95);}
+  if(id==='sub_normalise'){ai=ri(30,95);bi=ai-ri(1,9);}
+  if(id==='add_different'||id==='sub_different'){ai=ri(21,89);bi=ri(11,89);e2=e-ri(1,2);if(e2< -6)e2=-6;}
+  x=ten(dec(F(ai,10)),e);y=ten(dec(F(bi,10)),e2);const symbol=id.startsWith('sub')?'-':'+';
+  basic(op(symbol,x,y),['Make the powers match before combining the first factors. Alternatively, write both values as ordinary numbers.','Check that the final first factor is at least 1 and less than 10.']);
+ }else if(['mul_simple','mul_normalise','mul_negative','div_simple','div_normalise','div_negative'].includes(id)){
+  const div=id.startsWith('div');let e1,e2,c1,c2;
+  if(id==='mul_simple'){[c1,c2]=pick([['1.2','3'],['2.1','4'],['1.5','5'],['2','3.4'],['1.4','6']]);e1=ri(2,3);e2=ri(2,3);}
+  if(id==='mul_normalise'||id==='mul_negative'){c1=pick(['2.5','3.2','4.5','6','7.5','8']);c2=pick(['2','2.4','3','4','5']);e1=id==='mul_negative'?-ri(1,3):ri(2,3);e2=id==='mul_negative'?pick([-3,-2,-1,2,3]):ri(2,3);}
+  if(id==='div_simple'){const d=pick([2,3,4]);const k=pick([1.2,1.5,2]);c1=dec(times(decimal(String(k)),F(d)));c2=String(d);e1=ri(4,6);e2=2;}
+  if(id==='div_normalise'){[c1,c2]=pick([['1.2','3'],['2.4','8'],['3.5','7'],['1.8','6'],['3.2','4'],['2.5','5']]);e1=ri(2,6);e2=ri(2,3);}
+  if(id==='div_negative'){[c1,c2]=pick([['1.29','3'],['2.46','6'],['3.72','4'],['1.35','5'],['2.16','8'],['4.5','2']]);e1=pick([-3,-2,-1,2,3]);e2=-ri(1,4);}
+  x=ten(c1,e1);y=ten(c2,e2);
+  basic(op(div?'/':'*',x,y),div?['Divide the first factors. Subtract the power in the denominator from the power in the numerator.','Subtracting a negative is not the same as subtracting a positive. Finally, put the answer into standard form.']:['Multiply the first factors. Add the powers of ten.','The product of the first factors may be 10 or more. Put the final result back into standard form.']);
+ }else if(id==='table_total'||id==='table_difference'){
+  a=tenth();b=tenth();e=ri(4,6);x=ten(a,e);y=ten(b,e-1);const z=ten(tenth(),e-2);
+  lines=['A printing company records its production for three days.'];table={headers:['Day','Leaflets printed'],rows:[['Monday',maths(x)],['Tuesday',maths(y)],['Wednesday',maths(z)]]};
+  ask=id==='table_total'?'Work out the total number printed on Monday and Tuesday only.':'How many more leaflets were printed on Monday than on Tuesday?';ask+=' Give your answer in standard form.';
+  add('Number of leaflets','sf',op(id==='table_total'?'+':'-',x,y),'leaflets');hints=['Use only the two days named in the question.','Decide whether the question asks for a total or a difference. Then match powers or use ordinary numbers.'];solution=[`${maths(parts[0].expr)} = ${sfValue(evaluate(parts[0].expr))}.`];
+ }else if(id==='mass_group'||id==='mass_to_kg'){
+  a=pick(['1.2','1.5','2.4','2.5','3.2','4.5']);b=pick(['2','3','4','5','6']);x=ten(a,-2);y=ten(b,ri(3,5));
+  lines=[`One small metal component has a mass of ${maths(x)} grams.`,`A factory makes ${maths(y)} identical components.`];
+  ask=`Work out their total mass in ${id==='mass_to_kg'?'kilograms':'grams'}. Give your answer in standard form.`;const expr=id==='mass_to_kg'?op('/',op('*',x,y),lit(1000)):op('*',x,y);add('Total mass','sf',expr,id==='mass_to_kg'?'kg':'g');
+  hints=['Multiply the mass of one component by the number of components.',id==='mass_to_kg'?'Convert grams to kilograms before giving the final answer.':'Keep the mass unit unchanged.'];solution=[`${maths(op('*',x,y))} = ${nice(dec(evaluate(op('*',x,y))))} g.`,...(id==='mass_to_kg'?[`Divide by 1000 to change grams into kilograms.`]:[]),`The answer is ${sfValue(evaluate(expr))} ${parts[0].unit}.`];
+ }else if(id==='units'){
+  const choice=pick([{from:'metres',to:'millimetres',factor:'1000',u:'mm',e:-4},{from:'kilograms',to:'grams',factor:'1000',u:'g',e:-4},{from:'millilitres',to:'litres',factor:'0.001',u:'litres',e:5},{from:'millimetres',to:'metres',factor:'0.001',u:'m',e:2}]);x=ten(coef(),choice.e);
+  lines=[`A measurement is recorded as ${maths(x)} ${choice.from}.`];ask=`Write this measurement in ${choice.to}, in standard form.`;const expr=op('*',x,lit(choice.factor));add('Converted measurement','sf',expr,choice.u);facts={kind:'unit',...choice};
+  hints=['Decide whether the new unit is smaller or larger.','Convert the measurement, then check the standard-form notation.'];solution=[`Multiply by ${choice.factor} to change ${choice.from} to ${choice.to}.`,`${maths(expr)} = ${sfValue(evaluate(expr))} ${choice.u}.`];
+ }else if(id==='capacity_count'){
+  const bottles=ri(2,9)*100,bottleSize=pick([125,200,250,500]);const total=bottles*bottleSize;x=ten(standard(F(total)).coefficient,standard(F(total)).exponent);y=ten(standard(F(bottleSize)).coefficient,standard(F(bottleSize)).exponent);
+  lines=[`A tank contains ${maths(x)} ml of water.`,`Each bottle holds ${maths(y)} ml.`,`No water is lost while filling the bottles.`];ask='How many full bottles can be filled? Give an ordinary whole number.';add('Full bottles','ordinary',op('/',x,y),'bottles');hints=['The two capacities are already in the same unit.','Divide the total available volume by the volume for one bottle.'];solution=[`${maths(op('/',x,y))} = ${bottles} full bottles.`];
+ }else if(id==='times_larger'){
+  const c=pick([12,15,18,24]),factor=pick([2,3,4]),ea=ri(4,5);x=ten(dec(F(c*factor,10)),ea);y=ten(dec(F(c,10)),ea-ri(1,2));
+  lines=[`A file has a size of ${maths(x)} bytes.`,`Another file has a size of ${maths(y)} bytes.`];ask='How many times as large is the first file? Give an ordinary number.';add('Times as large','ordinary',op('/',x,y),'times');hints=['“How many times as large” asks for a division, not a subtraction.'];solution=[`${maths(op('/',x,y))} = ${nice(dec(evaluate(op('/',x,y))))}.`];
+ }else if(id==='estimate_percent'){
+  a=dec(F(ri(21,84),10));if(Number(a)%1===0)a=dec(plus(decimal(a),F(1,10)));e=ri(4,6);const percent=ri(21,84)+.2;
+  x=ten(a,e);const roundedA=String(Math.floor(Number(a)+.5)),roundedP=String(Math.floor(percent/10+.5)*10);const expr=op('*',ten(roundedA,e),op('/',lit(roundedP),lit(100)));
+  lines=[`A nature reserve has an area of ${maths(x)} m².`,`${percent}% of the reserve is woodland.`];ask='Estimate the woodland area by rounding both given numbers to 1 significant figure first. Give your estimate in standard form.';add('Estimated area','sf',expr,'m²');facts={kind:'estimate',area:x,percent:String(percent),rounding:'1 significant figure'};
+  hints=['Round the area and the percentage separately to one significant figure.','Use those rounded values for your calculation, not the original values.'];solution=[`${maths(x)} rounds to ${sf(roundedA,e)}.`,`${percent}% rounds to ${roundedP}%.`,`${maths(expr)} = ${sfValue(evaluate(expr))} m².`];
+ }else if(id==='two_step'){
+  e=ri(4,6);a=String(ri(2,7));b=String(ri(2,9));x=ten(a,e);y=ten(b,e-1);const n=pick([2,4,5]);const expr=op('/',op('+',x,y),lit(n));
+  lines=[`A charity receives £${maths(x)} in one collection and £${maths(y)} in another.`,`It shares all of this money equally between ${n} projects.`];ask='Work out the amount each project receives. Give your answer in standard form.';add('Amount for each project','sf',expr,'£');hints=['Combine the two collections before sharing.','Match the powers of ten, then divide the total by the number of projects.'];solution=[`Total: ${sfValue(evaluate(op('+',x,y)))} pounds.`,`Each project receives £${sfValue(evaluate(expr))}.`];
+ }else if(id==='missing_factor'){
+  a=pick(['1.2','1.5','2.5','3']);b=pick(['2','2.4','3','4']);x=ten(a,pick([-3,-2,-1,2,3]));y=ten(b,ri(2,4));const product=evaluate(op('*',x,y));const expr=op('/',lit(dec(product)),x);
+  lines=[`A number is multiplied by ${maths(x)}.`,`The result is ${sfValue(product)}.`];ask='Find the original number. Give your answer in standard form.';add('Original number','sf',expr);hints=['Undo multiplication by dividing the result by the known factor.','Check your answer by multiplying it by the given factor.'];solution=[`${sfValue(product)} ÷ ${maths(x)} = ${sfValue(evaluate(expr))}.`];
+ }else if(id==='add_small_gap'||id==='sub_small_gap'){
+  e=pick([-2,-3,-4]);x=ten(dec(F(ri(31,85),10)),e);y=ten(dec(F(ri(12,79),10)),e-pick([1,2]));
+  basic(op(id==='add_small_gap'?'+':'-',x,y),['Use the same power of ten before combining the first factors.','A negative power does not make a positive number negative. Keep all place-value zeros.','Put the final answer into standard form.']);
+ }else if(['mul_mixed','div_both_negative','div_small_result','div_exam_large'].includes(id)){
+  const [c,d]=pick([['1.2','3'],['2.4','8'],['3.5','7'],['1.8','6'],['3.2','4'],['2.5','5'],['4.8','2']]);
+  if(id==='mul_mixed'){x=ten(dec(F(ri(12,45),10)),ri(4,6));y=ten(pick(['2','2.5','4','5']),-ri(2,3));}
+  if(id==='div_both_negative'){x=ten(c,-ri(2,3));y=ten(d,-ri(5,6));}
+  if(id==='div_small_result'){x=ten(c,ri(2,3));y=ten(d,ri(5,6));}
+  if(id==='div_exam_large'){
+   const divisor=ri(2,8),hundredths=ri(Math.max(21,Math.ceil(100/divisor)),89);x=ten(dec(F(divisor*hundredths,100)),ri(4,5));y=ten(String(divisor),-ri(5,7));
   }
+  basic(op(id==='mul_mixed'?'*':'/',x,y),id==='mul_mixed'?['Multiply the first factors, then add the powers with their signs.','Check whether the resulting first factor needs dividing by ten. Keep the overall value unchanged.']:['Divide the first factors. Subtract the entire denominator power, including its sign.','A quotient smaller than 1 still needs to be written with a first factor from 1 up to 10. Adjust the power to match.']);
+ }else if(id==='three_terms'){
+  e=ri(4,6);x=ten(dec(F(ri(30,79),10)),e);y=ten(dec(F(ri(51,89),10)),e-1);const z=ten(dec(F(ri(11,40),10)),e-1);
+  basic(op('-',op('+',x,y),z),['The brackets show which quantities to combine first.','Match the powers before adding or subtracting. Write intermediate steps on paper.','Check the value and the final standard-form notation.']);
+  const total=plus(evaluate(x),evaluate(y)),result=evaluate(expression);
+  solution=[`First combine the first two quantities: ${maths(op('+',x,y))} = ${sfValue(total)}.`,`Then subtract ${maths(z)}: ${sfValue(total)} − ${maths(z)} = ${sfValue(result)}.`];
+ }else if(id==='fraction_products'){
+  x=ten(pick(['1.2','1.5','2.4','3.6']),ri(2,3));y=ten(pick(['2','4','5']),-ri(2,3));const z=ten(pick(['2','4','5']),-ri(3,4));
+  basic(op('/',op('*',x,y),z),['Work out the product above the fraction bar before dividing.','For multiplication, add the powers. For division, subtract the denominator power.','Finish with a first factor from 1 up to (but not including) 10.']);
+  const c=over(times(decimal(x.val),decimal(y.val)),decimal(z.val)),power=x.power+y.power-z.power;
+  solution=[`First factors: (${x.val} × ${y.val}) ÷ ${z.val} = ${dec(c)}.`,`Powers: ${x.power} + (${y.power}) − (${z.power}) = ${power}.`,`${sf(dec(c),power)} = ${sfValue(evaluate(expression))}.`];
+ }else if(id==='cost_many'){
+  const price=pick([12,15,24,25,32,45]);x=ten(dec(F(ri(12,68),10)),ri(4,5));
+  lines=[`A school supplier sells identical exercise books for ${price}p each.`,`It sells ${maths(x)} exercise books.`,`There are no additional charges.`];
+  ask='Work out the total cost in pounds. Give your answer in standard form.';
+  const ex=op('/',op('*',x,lit(price)),lit(100));add('Total cost','sf',ex,'£');facts={kind:'cost',pence:price,count:x};
+  hints=['Multiply the cost of one book by the number of books.','The price is in pence, but the answer must be in pounds.','Convert the unit before writing the final standard-form answer.'];
+  solution=[`Total in pence: ${maths(x)} × ${price} = ${nice(dec(evaluate(op('*',x,lit(price)))))} pence.`,`Divide by 100 to convert to pounds.`,`Total cost: £${sfValue(evaluate(ex))}.`];
+ }else if(id==='production_rate'){
+  x=ten(dec(F(ri(12,79),10)),2);const minutes=pick([120,150,200,240,300]);
+  lines=[`A counting machine records ${maths(x)} items every minute.`,`It works at the same rate for ${minutes} minutes, without stopping.`];ask='How many items does it record altogether? Give your answer in standard form.';
+  const ex=op('*',x,lit(minutes));add('Total recorded','sf',ex,'items');facts={kind:'rate',rate:x,minutes};
+  hints=['Multiply the number recorded in one minute by the number of minutes.','Make sure your answer is a total, not a rate.'];
+  solution=[`${maths(x)} × ${minutes} = ${nice(dec(evaluate(ex)))} items.`,`In standard form: ${sfValue(evaluate(ex))} items.`];
+ }else if(id==='percent_exact'){
+  x=ten(dec(F(ri(12,89),10)),ri(4,6));const percentage=pick([5,10,20,25,40,50,75]),fractionMode=r()<.5;
+  const fraction=F(percentage,100);lines=[`A recycling centre receives ${maths(x)} kg of material.`];
+  if(fractionMode)lines.push(`${fraction.n} out of every ${fraction.d} equal parts of this mass are metal.`);
+  else lines.push(`${percentage}% of this mass is metal.`);
+  ask='Calculate the mass of metal. Give your answer in standard form.';const ex=op('*',x,lit(dec(fraction)));add('Mass of metal','sf',ex,'kg');facts={kind:'portion',percentage,fractionMode};
+  hints=['Find the stated fraction or percentage of the total. This question does not ask for an estimate.','Keep the full value, then check the standard-form notation.'];
+  solution=[`The required part is ${percentage}% = ${dec(fraction)} of the whole.`,`${maths(x)} × ${dec(fraction)} = ${sfValue(evaluate(ex))} kg.`];
+ }else if(id==='table_range'){
+  e=ri(4,6);const values=[ten(dec(F(ri(12,19),10)),e),ten(dec(F(ri(31,49),10)),e),ten(dec(F(ri(71,89),10)),e),ten(dec(F(ri(51,68),10)),e)];
+  const ordered=shuffle(values,r),days=['Monday','Tuesday','Wednesday','Thursday'];
+  lines=['A distribution centre records the number of parcels sorted on four days.'];table={headers:['Day','Parcels sorted'],rows:ordered.map((v,i)=>[days[i],maths(v)])};ask='Find the range of the daily numbers of parcels. Give your answer in standard form.';
+  const ex=op('-',values[2],values[0]);add('Range','sf',ex,'parcels');facts={kind:'range',values:ordered};
+  hints=['Range means the largest value minus the smallest value.','Find those two values; the first and last rows are not necessarily the ones you need.'];
+  solution=[`Largest: ${maths(values[2])}. Smallest: ${maths(values[0])}.`,`Range = ${maths(ex)} = ${sfValue(evaluate(ex))} parcels.`];
+ }else if(id==='per_item_mass'){
+  const mg=pick(['0.12','0.15','0.24','0.25','0.32','0.45']),count=ten(String(ri(2,9)),6),mass=over(times(decimal(mg),evaluate(count)),F(1000));
+  x=ten(standard(mass).coefficient,standard(mass).exponent);y=count;
+  lines=[`${maths(y)} identical tiny beads have a total mass of ${maths(x)} grams.`];ask='Work out the mass of one bead in milligrams. Give your answer in standard form.';
+  const ex=op('*',op('/',x,y),lit(1000));add('Mass of one bead','sf',ex,'mg');facts={kind:'mass_each',mass:x,count:y};
+  hints=['Divide the total mass by the number of beads.','The total is in grams; the requested mass of one bead is in milligrams.','Convert the unit, then give standard form.'];
+  solution=[`Mass of one bead in grams: ${maths(op('/',x,y))} = ${nice(dec(over(mass,evaluate(count))))} g.`,`Multiply by 1000 to change grams into milligrams.`,`Mass of one bead: ${sfValue(evaluate(ex))} mg.`];
+ }else if(id==='remaining_capacity'){
+  e=ri(4,5);x=ten(dec(F(ri(55,89),10)),e);y=ten(dec(F(ri(12,35),10)),e-1);const trips=ri(2,4);
+  lines=[`A storage tank contains ${maths(x)} litres of water.`,`A tanker collects ${maths(y)} litres on each of ${trips} trips.`,`No other water enters or leaves the tank.`];ask='How much water is left in the storage tank? Give your answer in standard form.';
+  const ex=op('-',x,op('*',y,lit(trips)));add('Water remaining','sf',ex,'litres');facts={kind:'remaining',start:x,each:y,trips};
+  hints=['Work out the amount collected over all trips.','Subtract that amount from the starting quantity. The question asks what remains, not what was taken.'];
+  solution=[`Water collected: ${maths(y)} × ${trips} = ${sfValue(evaluate(op('*',y,lit(trips))))} litres.`,`Water remaining: ${maths(x)} − ${sfValue(evaluate(op('*',y,lit(trips))))} = ${sfValue(evaluate(ex))} litres.`];
+ }else if(id==='method_choice'){
+  e=ri(3,5);a=dec(F(ri(12,38),10));b=dec(F(ri(41,58),10));x=ten(a,e);y=ten(b,e);
+  lines=[`${name} wants to add ${maths(x)} and ${maths(y)}.`];ask='Which method will give the correct value?';
+  const correct='Add the first factors and keep the common power of ten, then check the notation.';
+  const options=shuffle([correct,'Add the first factors and add the two powers of ten.','Multiply the first factors and keep the common power of ten.','Keep the larger first factor and add the two powers of ten.'],r);
+  parts=[{type:'choice',label:'Method',options,answer:options.indexOf(correct)}];facts={kind:'method',values:[x,y]};
+  hints=['These quantities already have the same power of ten.','Think of each first factor as a number of equal-sized units.'];solution=[`${maths(x)} + ${maths(y)} = (${a} + ${b}) × 10<sup>${e}</sup> = ${sfValue(plus(evaluate(x),evaluate(y)))}.`];
 
-  // Allowed exponent helpers: in [-10, 10], excluding 0 and 1
-  const MIN_E = -10, MAX_E = 10;
-  const FORBIDDEN = new Set([0,1]);
-  function isAllowedExp(e){ return e>=MIN_E && e<=MAX_E && !FORBIDDEN.has(e); }
-
-  // Pick a single exponent within allowed range
-  function pickExp(min=MIN_E,max=MAX_E){
-    for(let tries=0; tries<100; tries++){
-      const e = randi(min,max);
-      if(isAllowedExp(e)) return e;
-    }
-    return -2; // safe fallback
+ }else throw Error('Missing generator '+id);
+ 
+ // Expand the worked method. These lines are released only in a different-number
+ // example, or once an attempted question has been irreversibly closed.
+ if(['to_sf_large','to_sf_small','internal_zero'].includes(id)){
+  const p=parts[0],direction=p.exponent>=0?'left':'right';
+  solution=[`Move the decimal point ${Math.abs(p.exponent)} place${Math.abs(p.exponent)===1?'':'s'} ${direction} to make ${p.coefficient}.`,
+   p.exponent<0?'The original value is smaller than 1, so the power is negative.':'The original value is at least 10, so the power is positive.',
+   `${nice(p.value)} = ${sf(p.coefficient,p.exponent)}.`];
+ }
+ if(['to_ord_large','to_ord_small'].includes(id)){
+  const p=parts[0];solution=[p.exponent===0?'10⁰ = 1, so the value of the first factor stays unchanged.':`Multiply by 10${p.exponent<0?' to a negative power: divide by '+nice('1'+'0'.repeat(-p.exponent))+'.':` to the power ${p.exponent}: multiply by ${nice('1'+'0'.repeat(p.exponent))}.`}`,
+   p.exponent===0?'No place-value shift is needed.':`Move the decimal point ${Math.abs(p.exponent)} place${Math.abs(p.exponent)===1?'':'s'} ${p.exponent<0?'left':'right'}, inserting zeros where needed.`,
+   `${sf(p.coefficient,p.exponent)} = ${nice(p.value)}.`];
+ }
+ if(expression&&['+','-','*','/'].includes(expression.op)){
+  const [left,right]=expression.args;
+  if(left.power!==undefined&&right.power!==undefined){
+   const sign=expression.op;
+   if(sign==='+'||sign==='-'){
+    const common=Math.min(left.power,right.power),lc=dec(times(decimal(left.val),power10(left.power-common))),rc=dec(times(decimal(right.val),power10(right.power-common)));
+    const result=sign==='+'?plus(decimal(lc),decimal(rc)):minus(decimal(lc),decimal(rc));
+    solution=[`Use the same power: ${maths(left)} = ${sf(lc,common)}, and ${maths(right)} = ${sf(rc,common)}.`,
+      `Combine the first factors: ${lc} ${sign==='+'?'+':'−'} ${rc} = ${dec(result)}.`,
+      `${sf(dec(result),common)} = ${sfValue(evaluate(expression))}.`];
+   }else{
+    const first=sign==='*'?times(decimal(left.val),decimal(right.val)):over(decimal(left.val),decimal(right.val));
+    const pow=sign==='*'?left.power+right.power:left.power-right.power;
+    solution=[`First factors: ${left.val} ${sign==='*'?'×':'÷'} ${right.val} = ${dec(first)}.`,
+      `Powers: ${left.power} ${sign==='*'?'+':'−'} (${right.power}) = ${pow}.`,
+      `Combine, then check the first factor: ${sf(dec(first),pow)} = ${sfValue(evaluate(expression))}.`];
+   }
   }
+ }
 
-  // Pick a pair for add/sub: same or differ by 1 or 2; both allowed and within range
-  function pickExpPair(){
-    const diffs=[0,1,2];
-    for(let tries=0; tries<200; tries++){
-      const diff = choice(diffs);
-      const e1 = pickExp();
-      const sign = choice([-1,1]);
-      let e2 = e1 + sign*diff;
-      if(!isAllowedExp(e2)) e2 = e1 - sign*diff;
-      if(isAllowedExp(e2) && Math.abs(e2-e1)<=2) return [e1,e2];
-    }
-    const e = pickExp();
-    return [e,e];
-  }
-
-  const sf = (a,e)=>`<span class="sf">${a} × 10<sup>${e}</sup></span>`;
-
-  // Ensure final answer exponent is allowed and within range (no 0 or +1)
-  function ensureGoodAnswer(makeProblemFn){
-    for(let tries=0; tries<200; tries++){
-      const p = makeProblemFn();
-      if(p.ansType==='standard'){
-        const n = p.ans.n;
-        if(!isAllowedExp(n)) continue;
-      }
-      return p;
-    }
-    return makeProblemFn();
-  }
-
-  // --- Problem Generators ---
-  function genAddRaw(){
-    const [e1,e2] = pickExpPair();
-    const a = randi(2,8), b = randi(1,7);
-    const val = a*10**e1 + b*10**e2;
-    const ans = toStandardFromValue(val);
-    return {type:'add', text:`(${sf(a,e1)}) + (${sf(b,e2)})`, ansType:'standard', ans};
-  }
-  const genAdd = ()=>ensureGoodAnswer(genAddRaw);
-
-  function genSubRaw(){
-    for(let tries=0; tries<200; tries++){
-      const [e1,e2] = pickExpPair();
-      const a = randi(4,9), b = randi(1,6);
-      const v1 = a*10**e1, v2 = b*10**e2;
-      if(v1<=v2) continue; // keep result positive/non-zero
-      const val = v1 - v2;
-      const ans = toStandardFromValue(val);
-      return {type:'sub', text:`(${sf(a,e1)}) − (${sf(b,e2)})`, ansType:'standard', ans};
-    }
-    const e = pickExp();
-    let a = randi(5,9), b = randi(1,4);
-    const val = a*10**e - b*10**e;
-    const ans = toStandardFromValue(val);
-    return {type:'sub', text:`(${sf(a,e)}) − (${sf(b,e)})`, ansType:'standard', ans};
-  }
-  const genSub = ()=>ensureGoodAnswer(genSubRaw);
-
-  function genMulRaw(){
-    const e1 = pickExp(), e2 = pickExp();
-    const a = choice([1.2,1.5,2,2.5,3,3.6,4,4.5,5,6.4,7.2,8,9]);
-    const b = choice([1.1,1.25,1.6,2,2.4,3,3.5,4,5,6,7.5,8,9]);
-    const prod = a*b; const e = e1+e2;
-    let {a:ca, n:cn} = normalise(prod, e);
-    const val = ca * 10**cn;
-    return {type:'mul', text:`(${sf(a,e1)}) × (${sf(b,e2)})`, ansType:'standard', ans:{a:ca, n:cn, value:val}};
-  }
-  const genMul = ()=>ensureGoodAnswer(genMulRaw);
-
-  function genDivRaw(){
-    const e1 = pickExp(), e2 = pickExp();
-    const a = choice([1.2,1.5,2,2.4,3,3.6,4.5,6,7.2,8,9]);
-    const b = choice([1.2,1.5,2,2.5,3,3.6,4,5,6,7.5,9]);
-    const quot = a/b; const e = e1-e2;
-    let {a:ca, n:cn} = normalise(quot, e);
-    const val = ca * 10**cn;
-    return {type:'div', text:`(${sf(a,e1)}) ÷ (${sf(b,e2)})`, ansType:'standard', ans:{a:ca, n:cn, value:val}};
-  }
-  const genDiv = ()=>ensureGoodAnswer(genDivRaw);
-
-  function genToStdRaw(){
-    const e = pickExp(-10,10);
-    const a = randi(1,9);
-    const ordinary = (e>=0)? (a.toString() + '0'.repeat(e)) : ('0.' + '0'.repeat(-e-1) + a.toString());
-    const ans = normalise(a, e);
-    const val = ans.a * 10**ans.n;
-    return {type:'toStd', text:`Write ${ordinary} in standard form`, ansType:'standard', ans:{a:ans.a, n:ans.n, value:val}};
-  }
-  const genToStd = ()=>ensureGoodAnswer(genToStdRaw);
-
-  function genToOrd(){
-    const e = pickExp(-10,10);
-    const a = choice([1.2,1.5,2,2.5,3,3.8,4.2,5,6.4,7.1,8.6,9]);
-    const val = a * 10**e;
-    return {type:'toOrd', text:`${sf(a,e)} in ordinary form`, ansType:'ordinary', ans:{value:val, a:a, n:e}};
-  }
-
-  const gens = { add:genAdd, sub:genSub, mul:genMul, div:genDiv, toStd:genToStd, toOrd:genToOrd };
-
-  function planQuestions(){
-    // fixed mix totaling 15
-    const base = ['add','sub','mul','div','toStd','toOrd'];
-    const target = {add:3, sub:3, mul:3, div:2, toStd:2, toOrd:2};
-    const out=[]; base.forEach(t=>{ for(let i=0;i<target[t];i++) out.push(t); });
-    for(let i=out.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [out[i],out[j]]=[out[j],out[i]]; }
-    return out.slice(0,TOTAL);
-  }
-
-  // --- Rendering ---
-  let problems=[];
-  function buildRow(i,p){
-    const label = ({add:'Add', sub:'Subtract', mul:'Multiply', div:'Divide', toStd:'Ordinary → Standard', toOrd:'Standard → Ordinary'})[p.type];
-    const ansBox = p.ansType==='standard'
-      ? `<div class='input-wrapper std-input' id='wrap${i}'>
-           <input aria-label='coefficient' class='base-input coeff' inputmode='decimal' placeholder='a'>
-           <span class='ten-block'>
-             <span class='ten-text'>×10</span>
-             <input aria-label='exponent' class='exp-input exp' inputmode='numeric' placeholder='n'>
-           </span>
-         </div>`
-      : `<div class='input-wrapper' id='wrap${i}'>
-           <input aria-label='ordinary number' class='base-input ordinary' inputmode='decimal' placeholder='answer'>
-         </div>`;
-
-    return `<div class='problem' data-idx='${i}' data-type='${p.type}'>
-      <div class='expr'><span class='type-tag'>${label}</span> <span class='math'>${p.text}</span></div>
-      ${ansBox}
-      <span class='marker'></span>
-      <span class='msg'></span>
-    </div>`;
-  }
-
-  function render(){
-    problems.length=0; $grid.innerHTML='';
-    const plan = planQuestions();
-    for(let i=0;i<plan.length;i++){
-      const t = plan[i];
-      const p = gens[t]();
-      problems.push(p);
-      $grid.insertAdjacentHTML('beforeend', buildRow(i,p));
-    }
-    updateScore('');
-    reveal(false);
-  }
-
-  function updateScore(t){
-    document.getElementById('score').textContent=t;
-    document.getElementById('scoreTop').textContent=t;
-  }
-
-  let hasCelebrated=false;
-  function celebrate(){
-    if(hasCelebrated) return; hasCelebrated=true;
-    const b=document.getElementById('celebrate');
-    b.hidden=false; setTimeout(()=>b.hidden=true, 4000);
-    if(window.confetti){
-      const end=Date.now()+1500;
-      (function frame(){
-        confetti({ particleCount: 7, angle: 60, spread: 55, origin: { x: 0 } });
-        confetti({ particleCount: 7, angle: 120, spread: 55, origin: { x: 1 } });
-        if(Date.now()<end) requestAnimationFrame(frame);
-      })();
-    }
-  }
-
-  function check(){
-    let ok=0;
-    document.querySelectorAll('.problem').forEach((row,i)=>{
-      const p = problems[i];
-      const mark = row.querySelector('.marker');
-      const msg = row.querySelector('.msg');
-      let correct=false, message='';
-      if(p.ansType==='standard'){
-        const coeff = parseFloat(row.querySelector('.coeff').value.trim());
-        const exp = parseInt(row.querySelector('.exp').value.trim());
-        if(isNaN(coeff) || isNaN(exp)){
-          /* Removed the 'Enter both boxes' message as requested */
-          correct=false; message='';
-        } else if(!(Math.abs(coeff)>=1 && Math.abs(coeff)<10)){
-          correct=false; message='Not in standard form (1 ≤ a < 10)';
-        } else {
-          const studentVal = coeff * 10**exp;
-          const truth = p.ans.value;
-          correct = nearlyEqual(studentVal, truth);
-          message = correct? '':'Check place value / renormalise';
-        }
-      } else {
-        const valStr = row.querySelector('.ordinary').value.trim();
-        if(!valStr){ correct=false; message='Enter a number'; }
-        else{
-          const studentVal = Number(valStr);
-          if(Number.isNaN(studentVal)){ correct=false; message='Not a valid number'; }
-          else { correct = nearlyEqual(studentVal, p.ans.value); message = correct?'':'Re-check decimal shifts'; }
-        }
-      }
-      if(correct){ mark.textContent='✓'; mark.className='marker ok'; msg.textContent=''; ok++; }
-      else { mark.textContent='✗'; mark.className='marker no'; msg.textContent=message; }
-    });
-    updateScore(`You scored ${ok}/${TOTAL}`);
-    if(ok===TOTAL) celebrate();
-  }
-
-  function reveal(show=true){
-    document.querySelectorAll('.problem').forEach((row,i)=>{
-      const p = problems[i];
-      let sol='';
-      if(p.ansType==='standard'){
-        const a = roundSig(p.ans.a, 3);
-        const n = p.ans.n;
-        sol = `${a}×10^${n}`;
-      } else {
-        const val = p.ans.value;
-        if(Math.abs(val) >= 1e6 || (Math.abs(val) < 1e-3 && val!==0)){
-          sol = val.toExponential();
-        } else {
-          sol = (Math.round(val*1e10)/1e10).toLocaleString('en-GB');
-        }
-      }
-      row.querySelector('.msg').textContent = show? `Ans: ${sol}` : '';
-    });
-  }
-
-  document.getElementById('checkBtn').addEventListener('click', check);
-  document.getElementById('newBtn').addEventListener('click', ()=>{ hasCelebrated=false; render(); });
-  document.getElementById('revealBtn').addEventListener('click', ()=>{
-    const any = Array.from(document.querySelectorAll('.msg')).some(el=>el.textContent.startsWith('Ans:'));
-    reveal(!any);
-  });
-
-  // initial
-  render();
+for(const p of parts){if(p.value!==undefined){const s=standard(decimal(p.value));if((s.coefficient.split('.')[1]||'').length>3)throw new CandidateRejected('Coefficient too long '+id);if(s.exponent< -8||s.exponent>12)throw new CandidateRejected('Answer out of range '+id);if(p.type==='ordinary'&&(p.value.length>13||(p.value.split('.')[1]||'').length>7))throw new CandidateRejected('Ordinary answer too long');}}
+ const signature=JSON.stringify({lines,expression,table,ask,options:parts.map(p=>p.options||null)}).replace(new RegExp(NAMES.join('|'),'g'),'Person');
+ return {id,seed:seed>>>0,tier:spec.tier,lines,expression,table,ask,parts,hints,solution,facts,signature};
+}
+// Validate the actual generated content, not just the initial exponent draw.
+// Renormalising, subtracting powers and worked methods can otherwise introduce 0 or +1.
+function powerPolicy(q){
+ if(MC_POWER_EXCEPTIONS.has(q.id))return q.parts.every(p=>p.type==='choice')&&!q.expression;
+ const bad=/(?:<sup>\s*\+?(?:0|1)\s*<\/sup>|10[⁰¹]|10\^\+?(?:0|1)(?![0-9]))/;
+ const visible=[...q.lines,q.ask,...q.hints,...q.solution,JSON.stringify(q.table||''),...q.parts.flatMap(p=>p.options||[])].join(' ');
+ if(bad.test(visible))return false;
+ const visit=x=>!x||((x.power===undefined||![0,1].includes(x.power))&&(!x.args||x.args.every(visit)));
+ if(!visit(q.expression))return false;
+ return q.parts.every(p=>visit(p.expr)&&(p.type!=='sf'||![0,1].includes(p.exponent)));
+}
+function generate(id,seed){
+ if(!BYID[id])throw Error('Unknown question variation: '+id);
+ for(let attempt=0;attempt<256;attempt++){
+  const candidateSeed=attempt?hash(seed,attempt+19000):seed;
+  try{const q=make(id,candidateSeed);if(!powerPolicy(q))continue;q.seed=seed>>>0;return q;}
+  catch(error){if(!(error instanceof CandidateRejected))throw error;}
+ }
+ throw Error('No valid question could be generated for '+id+'. No out-of-policy fallback was used.');
+}
+function parse(raw){const original=String(raw??'').trim().replace(/−/g,'-').replace(/[·∙]/g,'.');if(!original)return {ok:false,message:'Enter your answer before checking.'};if(original.length>60)return {ok:false,message:'This answer is too long. Check the entry.'};let s=original;if(s.includes(',')){if(!/^[+-]?\d{1,3}(?:,\d{3})+(?:\.\d+)?$/.test(s))return {ok:false,message:'Use commas only to group thousands, or leave them out.'};s=s.replace(/,/g,'');}if(!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(s))return {ok:false,message:'Enter a complete decimal number, not an expression or e-notation.'};if((s.split('.')[1]||'').length>18)return {ok:false,message:'No answer needs that many decimal places.'};return {ok:true,value:decimal(s),text:dec(decimal(s))};}
+function markPart(p,input){
+ if(p.type==='choice'){const i=String(input??'');if(!/^\d+$/.test(i)||Number(i)>=p.options.length)return {valid:false,correct:false,message:'Choose one option before checking.'};return {valid:true,correct:Number(i)===p.answer};}
+ if(p.type==='order'){if(!Array.isArray(input)||input.length!==p.options.length||new Set(input).size!==input.length||input.some(x=>!p.options.some(o=>o.key===String(x))))return {valid:false,correct:false,message:'Choose each value once, from smallest to largest.'};return {valid:true,correct:input.every((x,i)=>String(x)===p.answer[i])};}
+ const raw=p.type==='sf'?input?.coefficient:input,n=parse(raw);if(!n.ok)return {valid:false,correct:false,message:n.message};
+ if(p.type==='sf'){
+  const expRaw=String(input?.exponent??'').trim().replace(/−/g,'-');if(!/^[+-]?\d{1,2}$/.test(expRaw))return {valid:false,correct:false,message:'Enter a whole-number power of ten, including its minus sign when needed.'};
+  if(cmp(n.value,F(1))<0||cmp(n.value,F(10))>=0)return {valid:true,correct:false,message:'The first number must be at least 1 and less than 10.'};
+  return {valid:true,correct:eq(n.value,decimal(p.coefficient))&&Number(expRaw)===p.exponent,message:'Check both the first number and the power of ten.'};
+ }
+ return {valid:true,correct:eq(n.value,decimal(p.value)),message:'Check every digit and the position of the decimal point.'};
+}
+function newSession(seed,history=[]){return {version:VERSION,seed:seed>>>0,counter:0,records:[],current:null,level:1,highest:1,promotions:[],promotionNumeric:false,streak:0,failures:0,queue:[],seen:{},recent:history.slice(-120),ended:false,created:new Date().toISOString()};}
+function stats(s){const rs=s.records;return {closed:rs.length,correct:rs.filter(r=>r.outcome==='independent'||r.outcome==='supported').length,independent:rs.filter(r=>r.outcome==='independent').length,supported:rs.filter(r=>r.outcome==='supported').length,notYet:rs.filter(r=>r.outcome!=='independent'&&r.outcome!=='supported').length,points:rs.reduce((n,r)=>n+(r.outcome==='independent'?2:r.outcome==='supported'?1:0),0)};}
+function select(s){
+ s.nextReason='practice';if(!s.records.length)return 'to_sf_large';
+ const now=s.records.length,last=s.records.at(-1),r=rng(hash(s.seed,s.counter+400));
+ const due=s.queue.findIndex(q=>q.due<=now);if(due>=0&&s.records.slice(-2).some(x=>x.reason!=='support')){s.nextReason='support';return s.queue.splice(due,1)[0].id;}
+ let pool=VARIANTS.filter(v=>v.tier<=s.level);const coverage=now%3===2;
+ if(!coverage){
+  const tierPool=pool.filter(v=>v.tier===s.level);
+  // Once this frontier has been sampled, prefer unseen related applications to
+  // repeating the same advanced families while other useful variations wait.
+  const freshRelated=pool.filter(v=>v.tier>=Math.max(2,s.level-2)&&!(s.seen[v.id]?.shown));
+  if(tierPool.length)pool=tierPool.some(v=>!(s.seen[v.id]?.shown))||!freshRelated.length?tierPool:freshRelated;
+ }
+ const eligible=pool.filter(v=>v.id!==last.id);if(eligible.length)pool=eligible;
+ pool.sort((a,b)=>{const aa=s.seen[a.id]||{shown:0},bb=s.seen[b.id]||{shown:0};return aa.shown-bb.shown;});
+ const min=s.seen[pool[0].id]?.shown||0;pool=pool.filter(v=>(s.seen[v.id]?.shown||0)===min);return pool[Math.floor(r()*pool.length)].id;
+}
+function next(s){if(s.ended||s.current?.status==='open')return false;if(s.records.length>=MAX_QUESTIONS){s.ended=true;return false;}let id=select(s),q;let seed;for(let t=0;t<300;t++){seed=hash(s.seed,++s.counter);q=generate(id,seed);if(!s.recent.includes(q.signature))break;if(t===299)throw Error('Question bank is temporarily exhausted for this variation. Start a new round.');}
+ s.current={id,seed,status:'open',attempts:0,help:false,inputs:[],checkedInputs:[],checks:[],outcome:null,reason:s.nextReason||'practice'};s.recent.push(q.signature);s.recent=s.recent.slice(-240);return true;}
+function current(s){return s.current?generate(s.current.id,s.current.seed):null;}
+function queue(s,id,delay){if(!id||s.queue.some(q=>q.id===id))return;s.queue.push({id,due:s.records.length+delay});s.queue=s.queue.slice(-8);}
+function close(s,outcome){const c=s.current;if(!c||c.status!=='open')return false;c.status='closed';c.outcome=outcome;const q=generate(c.id,c.seed);const rec=JSON.parse(JSON.stringify(c));s.records.push(rec);
+ let ev=s.seen[c.id]||(s.seen[c.id]={shown:0,independent:0,supported:0,notYet:0,last:0});ev.shown++;ev.last=s.records.length;
+ if(outcome==='independent'){ev.independent++;s.streak++;s.failures=0;if(q.tier>=s.level){if(q.parts.some(p=>p.type==='sf'||p.type==='ordinary'))s.promotionNumeric=true;s.promotions.push(c.id);s.promotions=[...new Set(s.promotions)];}if(s.promotions.length>=2&&s.promotionNumeric&&s.level<5){s.level++;s.highest=Math.max(s.highest,s.level);s.promotions=[];s.promotionNumeric=false;}}
+ else {s.streak=0;if(outcome==='supported'){ev.supported++;queue(s,c.id,4);}else {ev.notYet++;s.failures++;queue(s,BYID[c.id].parent||'to_sf_large',0);queue(s,c.id,3);if(s.failures>=2){s.level=Math.max(1,s.level-1);s.promotions=[];s.promotionNumeric=false;s.failures=0;}}}
+ return true;}
+function check(s,inputs){const c=s.current;if(s.ended||!c||c.status!=='open')return {kind:'locked'};const q=current(s);const marks=q.parts.map((p,i)=>markPart(p,inputs[i]));if(marks.some(m=>!m.valid))return {kind:'invalid',marks};
+ const key=JSON.stringify(q.parts.map((p,i)=>p.type==='sf'?{coefficient:parse(inputs[i].coefficient).text,exponent:Number(String(inputs[i].exponent).replace(/−/g,'-'))}:p.type==='ordinary'?parse(inputs[i]).text:p.type==='choice'?Number(inputs[i]):inputs[i].map(String)));if(c.checks.some(k=>k===key))return {kind:'repeat',marks};c.checks.push(key);c.inputs=JSON.parse(JSON.stringify(inputs));c.checkedInputs=c.inputs;c.attempts++;const correct=marks.every(m=>m.correct);
+ if(correct){close(s,c.attempts===1&&!c.help?'independent':'supported');return {kind:'correct',marks};}if(c.attempts>=MAX_ATTEMPTS){close(s,'needs-practice');return {kind:'closed',marks};}return {kind:'wrong',marks,remaining:MAX_ATTEMPTS-c.attempts};}
+function help(s){if(!s.current||s.current.status!=='open'||s.ended)return false;s.current.help=true;return true;}
+function skip(s){return !s.ended&&close(s,'skipped');}
+function finish(s){if(s.ended)return false;if(s.current?.status==='open')close(s,'unfinished');s.ended=true;return true;}
+function continueSession(s){if(!s.ended||s.records.length>=MAX_QUESTIONS)return false;s.ended=false;return next(s);}
+function example(q){for(let i=1;i<200;i++){const ex=generate(q.id,hash(q.seed,i+4000));if(ex.signature!==q.signature&&JSON.stringify(ex.parts.map(p=>p.value||p.answer))!==JSON.stringify(q.parts.map(p=>p.value||p.answer)))return ex;}return null;}
+function validateSession(s){try{
+ if(!s||s.version!==VERSION||!Number.isInteger(s.seed)||!Number.isInteger(s.counter)||s.counter<0||s.counter>100000||!Array.isArray(s.records)||s.records.length>MAX_QUESTIONS||!Number.isInteger(s.level)||s.level<1||s.level>5||!Number.isInteger(s.highest)||s.highest<s.level||s.highest>5||!Array.isArray(s.recent)||s.recent.some(x=>typeof x!=='string')||!Array.isArray(s.queue)||!s.seen||typeof s.seen!=='object'||typeof s.ended!=='boolean'||!Array.isArray(s.promotions)||s.promotions.some(x=>!BYID[x])||typeof s.promotionNumeric!=='boolean'||!Number.isInteger(s.failures)||!Number.isInteger(s.streak))return false;
+ if(s.queue.some(x=>!BYID[x.id]||!Number.isInteger(x.due)))return false;
+ for(const c of [...s.records,...(s.current?[s.current]:[])]){
+  if(!BYID[c.id]||!Number.isInteger(c.seed)||!['open','closed'].includes(c.status)||!Number.isInteger(c.attempts)||c.attempts<0||c.attempts>3||typeof c.help!=='boolean'||!Array.isArray(c.checks)||!Array.isArray(c.inputs)||!Array.isArray(c.checkedInputs)||c.checks.length!==c.attempts)return false;
+  if(c.status==='closed'&&!['independent','supported','needs-practice','skipped','unfinished'].includes(c.outcome))return false;
+  if(c.outcome==='independent'&&(c.help||c.attempts!==1))return false;
+  if((c.outcome==='independent'||c.outcome==='supported')&&!generate(c.id,c.seed).parts.every((p,i)=>markPart(p,c.checkedInputs[i]).correct))return false;
+ }
+ for(const [id,z] of Object.entries(s.seen)){if(!BYID[id]||!z||!['shown','independent','supported','notYet','last'].every(k=>Number.isInteger(z[k])&&z[k]>=0))return false;}
+ if(s.records.some(r=>r.status!=='closed')||(s.ended&&s.current?.status==='open'))return false;
+ return true;
+ }catch{return false;}}
+return {VERSION,MAX_QUESTIONS,powerPolicy,VARIANTS,BYID,generate,newSession,next,current,check,help,skip,finish,continueSession,stats,example,validateSession,parse,markPart,standard,decimal,dec,evaluate,maths,sf,nice,hash,esc};
 })();
-</script>
+if(typeof module!=='undefined'&&module.exports)module.exports=StandardFormEngine;
+
+'use strict';
+const E=StandardFormEngine,$=id=>document.getElementById(id),STORE='standard-form-studio-v2',THEME='standard-form-studio-theme',RECENT='standard-form-studio-v2-recent';
+let session=null,storageOK=true,saved=null,busy=false,confirmation=null,toastTimer=null;
+const clone=x=>JSON.parse(JSON.stringify(x));
+function getStore(key){try{return localStorage.getItem(key);}catch{storageOK=false;return null;}}
+function putStore(key,value){try{localStorage.setItem(key,value);return true;}catch{storageOK=false;return false;}}
+function storageMessage(){if(!storageOK){$('storageNotice').hidden=false;$('storageNotice').textContent='This browser cannot save progress here. The activity still works, but export your results before closing the page.';}$('saveNote').textContent=storageOK?'Progress saves on this device. No learner data is sent to a server.':'Progress is available only while this page stays open. Export your results before closing.';}
+function persist(){if(session){putStore(STORE,JSON.stringify(session));putStore(RECENT,JSON.stringify(session.recent.slice(-120)));}storageMessage();}
+function seed(){try{const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0];}catch{return ((Math.random()*4294967296)^Date.now())>>>0;}}
+function fresh(){let recent=[];try{recent=JSON.parse(getStore(RECENT)||'[]');if(!Array.isArray(recent))recent=[];}catch{}session=E.newSession(seed(),recent);E.next(session);persist();renderQuestion(true);}
+function openDialog(id){const d=$(id);if(!d.open)d.showModal();}
+function closeDialog(id){const d=$(id);if(d.open)d.close();}
+function toast(message){clearTimeout(toastTimer);$('toast').textContent=message;toastTimer=setTimeout(()=>$('toast').textContent='',3500);}
+function confirmAction(text,action,button='Continue'){confirmation=action;$('confirmText').textContent=text;$('confirmYes').textContent=button;openDialog('confirmDialog');}
+function view(id){['startView','sessionView','resultsView'].forEach(v=>$(v).hidden=v!==id);$('teacherBtn').hidden=!session;}
+function questionHTML(q){let h=q.lines.map(p=>`<p>${p}</p>`).join('');if(q.expression)h+=`<div class="expression">${E.maths(q.expression)}</div>`;if(q.table)h+=`<div class="table-scroll"><table><thead><tr>${q.table.headers.map(x=>`<th scope="col">${x}</th>`).join('')}</tr></thead><tbody>${q.table.rows.map(row=>`<tr>${row.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;if(q.ask)h+=`<p class="question-ask">${q.ask}</p>`;return h;}
+const plain=html=>{const el=document.createElement('span');el.innerHTML=html;return el.textContent.replace(/\s+/g,' ').trim();};
+function optionText(html){return plain(html.replace(/<sup>(.*?)<\/sup>/g,'^$1'));}
+function answerFields(q){return q.parts.map((p,i)=>{
+ const leg=q.parts.length>1?`(${String.fromCharCode(97+i)}) ${E.esc(p.label)}`:E.esc(p.label);
+ let body='';
+ if(p.type==='sf')body=`<div class="sf-entry"><div class="coefficient-field"><label for="coeff${i}">First number</label><input id="coeff${i}" name="coeff${i}" autocomplete="off" inputmode="decimal" spellcheck="false" maxlength="24" placeholder="" aria-describedby="rule${i}"></div><span class="times-ten" aria-hidden="true">× 10</span><div class="power-field"><label for="exp${i}">Power</label><input id="exp${i}" name="exp${i}" autocomplete="off" inputmode="text" spellcheck="false" maxlength="4" aria-describedby="rule${i}"><button class="sign-button" type="button" data-sign="${i}" aria-label="Change sign of power">+/−</button></div></div><p class="sf-rule" id="rule${i}">First number: 1 ≤ a &lt; 10. Use an integer power; include a minus sign when needed.${p.unit?'<br>Answer unit: '+E.esc(p.unit)+'.':''}</p>`;
+ else if(p.type==='ordinary')body=`<div class="ordinary-shell"><input id="ordinary${i}" name="ordinary${i}" autocomplete="off" inputmode="decimal" maxlength="40" aria-label="${E.esc(p.label)}${p.unit?' in '+E.esc(p.unit):''}">${p.unit?`<span>${E.esc(p.unit)}</span>`:''}</div>`;
+ else if(p.type==='choice')body=`<div class="choice-options">${p.options.map((o,j)=>`<label class="choice"><input type="radio" name="choice${i}" value="${j}"><span>${o}</span></label>`).join('')}</div>`;
+ else if(p.type==='order')body=`<div class="ordering">${p.options.map((_,j)=>`<div class="order-row"><span>${j+1}.</span><select id="order${i}_${j}" aria-label="${j===0?'Smallest value':j===p.options.length-1?'Largest value':'Value in position '+(j+1)}"><option value="">Choose a value</option>${p.options.map(o=>`<option value="${o.key}">${E.esc(optionText(o.label))}</option>`).join('')}</select></div>`).join('')}</div>`;
+ return `<fieldset class="answer-part"><legend>${leg}</legend>${body}</fieldset>`;
+ }).join('');}
+function readInputs(q){return q.parts.map((p,i)=>p.type==='sf'?{coefficient:$('coeff'+i).value,exponent:$('exp'+i).value}:p.type==='ordinary'?$('ordinary'+i).value:p.type==='choice'?(document.querySelector(`input[name="choice${i}"]:checked`)?.value??''):p.options.map((_,j)=>$('order'+i+'_'+j).value));}
+function restoreInputs(q,inputs){q.parts.forEach((p,i)=>{const val=inputs?.[i];if(val===undefined)return;if(p.type==='sf'){if(val&&typeof val==='object'){$('coeff'+i).value=val.coefficient??'';$('exp'+i).value=val.exponent??'';}}else if(p.type==='ordinary')$('ordinary'+i).value=String(val);else if(p.type==='choice'){const opt=document.querySelector(`input[name="choice${i}"][value="${String(val).replace(/[^\d]/g,'')}"]`);if(opt)opt.checked=true;}else if(p.type==='order'&&Array.isArray(val))p.options.forEach((_,j)=>$('order'+i+'_'+j).value=String(val[j]??''));});}
+function feedback(text,kind=''){$('feedback').className='notice '+kind;$('feedback').textContent=text;$('feedback').hidden=!text;}
+function metrics(){if(!session)return;const t=E.stats(session);$('correctCount').textContent=t.correct;$('independentCount').textContent=t.independent;$('pointsCount').textContent=t.points;}
+function lockInputs(locked){$('answerFields').querySelectorAll('input,select,button').forEach(e=>e.disabled=locked);$('checkBtn').hidden=locked;$('nextBtn').hidden=!locked;$('easierBtn').hidden=locked;$('helpBtn').disabled=locked;}
+function renderQuestion(focus=false){if(!session)return;if(session.ended){renderResults();return;}view('sessionView');const q=E.current(session),c=session.current;if(!q)return;
+ $('questionTitle').textContent='Question '+(session.records.length+(c.status==='open'?1:0));$('questionBody').innerHTML=questionHTML(q);$('answerFields').innerHTML=answerFields(q);$('answerNote').textContent=q.parts[0].type==='sf'?'Use the two boxes to write your answer in standard form.':q.parts[0].type==='ordinary'?'Write an ordinary number. Do not use a power of ten.':q.parts[0].type==='order'?'Choose each value once, starting with the smallest.':'Choose your answer, then check.';
+ restoreInputs(q,c.inputs);lockInputs(c.status==='closed');feedback('');
+ if(c.status==='closed'){
+  if(c.outcome==='independent')feedback('Correct — on your first check. 2 practice points.','good');
+  else if(c.outcome==='supported')feedback('Correct. 1 practice point; this is recorded as supported or retried work.','good');
+  else feedback('This question is now closed with no points. Take a fresh question; your review will keep a record of this attempt.','warn');
+ }
+ metrics();storageMessage();if(focus){$('questionTitle').focus({preventScroll:true});window.scrollTo({top:0,behavior:'auto'});}
+}
+function doCheck(){if(busy||!session||session.ended)return;busy=true;try{const q=E.current(session),result=E.check(session,readInputs(q));if(result.kind==='locked')return;
+ if(result.kind==='invalid'){feedback(result.marks.filter(m=>!m.valid).map(m=>m.message).join(' '),'bad');return;}
+ if(result.kind==='repeat'){feedback('You have already checked that answer. Change it before checking again.','warn');return;}
+ persist();if(result.kind==='correct'){lockInputs(true);metrics();feedback(session.current.outcome==='independent'?'Correct — on your first check. 2 practice points.':'Correct. 1 practice point; this is recorded as supported or retried work.','good');$('nextBtn').focus({preventScroll:true});}
+ else if(result.kind==='closed'){lockInputs(true);metrics();feedback('Not correct yet. This question is now closed with no points. The next question will help you rebuild the idea.','warn');$('nextBtn').focus({preventScroll:true});}
+ else{const advice=result.marks.find(m=>!m.correct)?.message||'Check your working carefully.';feedback(`${advice} ${result.remaining} different ${result.remaining===1?'attempt remains':'attempts remain'}. Help is available without revealing this answer.`,'bad');}
+ }finally{busy=false;}}
+function showHelp(){if(!session||!E.help(session))return;session.current.inputs=readInputs(E.current(session));persist();const q=E.current(session);$('hintSteps').innerHTML=q.hints.map(s=>`<li>${E.esc(s)}</li>`).join('');$('exampleDetails').open=false;const ex=E.example(q);$('exampleBody').innerHTML=ex?`<div class="example-block"><p class="eyebrow">DIFFERENT NUMBERS · WORKED EXAMPLE</p><div class="question-text">${questionHTML(ex)}</div><div class="solution">${ex.solution.map(s=>`<p>${s}</p>`).join('')}</div></div>`:'<p>Use the method above and ask your teacher to demonstrate another example.</p>';openDialog('helpDialog');}
+function answerHTML(p){if(p.type==='sf')return E.sf(p.coefficient,p.exponent)+(p.unit?' '+E.esc(p.unit):'');if(p.type==='ordinary')return E.esc(E.nice(p.value))+(p.unit?' '+E.esc(p.unit):'');if(p.type==='choice')return p.options[p.answer];return p.answer.map(key=>p.options.find(o=>o.key===key).label).join(' &lt; ');}
+function inputText(p,val){if(val===undefined||val===''||val===null)return 'No answer';if(p.type==='sf')return `${val.coefficient||'…'} × 10^${val.exponent||val.exponent===0?val.exponent:'…'}`;if(p.type==='choice')return p.options[Number(val)]!==undefined?optionText(p.options[Number(val)]):'No choice';if(p.type==='order')return val.map(k=>{const o=p.options.find(o=>o.key===k);return o?optionText(o.label):'…';}).join(' < ');return String(val);}
+const outcomeLabel=o=>({'independent':'Independent first check','supported':'Correct with help / retry','needs-practice':'Needs more practice','skipped':'Skipped — no points','unfinished':'Unfinished — no points'})[o]||o;
+function renderResults(){view('resultsView');metrics();$('continueBtn').hidden=session.records.length>=E.MAX_QUESTIONS;const t=E.stats(session);$('resultsNote').textContent=`${t.closed} question${t.closed===1?'':'s'} recorded. Independent success and supported work are kept separate.${session.records.length>=E.MAX_QUESTIONS?' This round is complete. Export your results, then start a new round.':''}`;
+ $('metrics').innerHTML=[[t.independent,'Independent first check'],[t.supported,'Correct with help / retry'],[t.notYet,'Not yet correct / skipped'],[t.points,'Practice points']].map(([n,label])=>`<div class="metric"><strong>${n}</strong><span>${label}</span></div>`).join('');
+ $('reviews').innerHTML=session.records.map((rec,i)=>{const q=E.generate(rec.id,rec.seed),eligible=rec.attempts>0;return `<details class="review-card"><summary><span>Question ${i+1}</span><span class="status">${E.esc(outcomeLabel(rec.outcome))}</span></summary><div class="review-body"><div class="question-text">${questionHTML(q)}</div><div class="your-entry">Last checked answer: ${q.parts.map((p,j)=>E.esc(inputText(p,rec.checkedInputs[j]))).join(' · ')}<br>${rec.attempts} valid check${rec.attempts===1?'':'s'} · Help ${rec.help?'used':'not opened'}.</div>${eligible?`<div class="solution"><h3>Model answer</h3>${q.parts.map(p=>`<p>${answerHTML(p)}</p>`).join('')}<h3>Method</h3>${q.solution.map(s=>`<p>${s}</p>`).join('')}</div>`:'<p class="help">No answer was checked, so no solution is displayed for this question.</p>'}</div></details>`;}).join('');$('resultsTitle').focus({preventScroll:true});window.scrollTo({top:0,behavior:'auto'});}
+function teacher(){if(!session)return;const t=E.stats(session);const all=E.VARIANTS,checked=all.filter(v=>session.seen[v.id]?.shown).length;
+ $('teacherSummary').innerHTML=`<div class="teacher-intro"><div><h3>${session.current?.help&&session.current?.status==='open'?'Using support':t.notYet>t.independent?'May need a check-in':t.independent>0?'Building confidence':'Getting started'}</h3><p>Working demand ${session.level} of 5 · Highest reached ${session.highest}.<br>${checked} of ${all.length} variations encountered. Coverage is not mastery.</p></div></div><div class="teacher-metrics">${[[t.independent,'Independent'],[t.supported,'Help / retry'],[t.notYet,'Revisit / skipped'],[t.correct,'Correct overall']].map(([n,l])=>`<div><strong>${n}</strong><span>${l}</span></div>`).join('')}</div><p class="help">No answers or answer key are shown in this view.<br>Current question: ${session.current?.attempts||0} checks; in-app help ${session.current?.help?'used':'not opened'}.</p>`;
+ $('teacherTable').innerHTML=`<div class="table-scroll"><table class="teacher-table"><thead><tr><th>Variation</th><th>Independent</th><th>Help / retry</th><th>Revisit</th><th>Evidence</th></tr></thead><tbody>${all.map(v=>{const z=session.seen[v.id]||{independent:0,supported:0,notYet:0,shown:0};const recent=session.records.filter(r=>r.id===v.id).at(-1);const status=recent?.outcome==='independent'?'independent':recent?.outcome==='supported'?'supported':z.shown?'revisit':'unseen';return `<tr><td>${E.esc(v.label)}</td><td>${z.independent}</td><td>${z.supported}</td><td>${z.notYet}</td><td><span class="tag ${status}">${{independent:'Independent',supported:'Supported',revisit:'Revisit',unseen:'Not checked'}[status]}</span></td></tr>`;}).join('')}</tbody></table></div>`;openDialog('teacherDialog');}
+function exportResults(){if(!session||!session.ended)return;const rows=[['Question','Variation','Outcome','Valid checks','Help used','Last checked answer','Model answer (closed, attempted questions only)']];session.records.forEach((rec,i)=>{const q=E.generate(rec.id,rec.seed);rows.push([i+1,E.BYID[q.id].label,outcomeLabel(rec.outcome),rec.attempts,rec.help?'Yes':'No',q.parts.map((p,j)=>inputText(p,rec.checkedInputs[j])).join(' | '),rec.attempts?q.parts.map(p=>optionText(answerHTML(p))).join(' | '):'Not released — no checked attempt']);});const safe=x=>{let s=String(x);if(/^[=+@-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';};const content='\ufeff'+rows.map(r=>r.map(safe).join(',')).join('\r\n');const a=document.createElement('a'),url=URL.createObjectURL(new Blob([content],{type:'text/csv;charset=utf-8'}));a.href=url;a.download='standard-form-results.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Your results export has been prepared.');}
+function finish(){if(!session||session.ended)return;const c=session.current;confirmAction(c.status==='open'?'Finish this practice? The current question will close with no points and cannot be reopened for credit. Attempted questions can then be reviewed.':'Finish this practice and review the completed questions?',()=>{if(c.status==='open')c.inputs=readInputs(E.current(session));E.finish(session);persist();renderResults();},'Finish & review');}
+$('startBtn').addEventListener('click',()=>{if(busy)return;busy=true;try{if(saved){session=saved;saved=null;session.ended?renderResults():renderQuestion(true);}else fresh();}finally{busy=false;}});
+$('answerForm').addEventListener('submit',e=>{e.preventDefault();doCheck();});
+$('nextBtn').addEventListener('click',()=>{if(!session||busy)return;busy=true;try{if(E.next(session)||session.ended){persist();renderQuestion(true);}}finally{busy=false;}});
+$('helpBtn').addEventListener('click',showHelp);
+$('easierBtn').addEventListener('click',()=>{if(!session||session.current.status!=='open')return;confirmAction('Move to a fresh question? This question will be recorded as skipped with no points. No answer will be shown now.',()=>{session.current.inputs=readInputs(E.current(session));E.skip(session);E.next(session);persist();renderQuestion(true);},'Take a fresh question');});
+$('finishBtn').addEventListener('click',finish);
+$('continueBtn').addEventListener('click',()=>{if(session&&E.continueSession(session)){persist();renderQuestion(true);}});
+$('newBtn').addEventListener('click',()=>{confirmAction('Start again with new questions and a fresh score? Export this review first if you need to keep it.',fresh,'Start a new round');});
+$('themeBtn').addEventListener('click',()=>{setTheme(document.body.dataset.theme==='dark'?'light':'dark');putStore(THEME,document.body.dataset.theme);});
+function setTheme(theme){document.body.dataset.theme=theme;$('themeBtn').textContent=theme==='dark'?'Light mode':'Dark mode';$('themeBtn').setAttribute('aria-pressed',String(theme==='dark'));}
+$('teacherBtn').addEventListener('click',teacher);$('aboutBtn').addEventListener('click',()=>openDialog('aboutDialog'));$('exportBtn').addEventListener('click',exportResults);
+$('printBtn').addEventListener('click',()=>{if(!session?.ended)return;const ds=[...document.querySelectorAll('#reviews details')],was=ds.map(d=>d.open);ds.forEach(d=>d.open=true);const restore=()=>{ds.forEach((d,i)=>d.open=was[i]);window.removeEventListener('afterprint',restore);};window.addEventListener('afterprint',restore);window.print();});
+$('confirmYes').addEventListener('click',()=>{const fn=confirmation;confirmation=null;closeDialog('confirmDialog');if(fn)fn();});
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.close==='confirmDialog')confirmation=null;closeDialog(b.dataset.close);}));
+$('confirmDialog').addEventListener('cancel',()=>confirmation=null);
+$('answerFields').addEventListener('click',e=>{const b=e.target.closest('[data-sign]');if(!b||b.disabled||session?.current.status!=='open')return;const input=$('exp'+b.dataset.sign),v=input.value.trim().replace(/−/g,'-');input.value=v.startsWith('-')?v.slice(1):'-'+v.replace(/^\+/,'');input.focus();session.current.inputs=readInputs(E.current(session));persist();});
+$('answerFields').addEventListener('input',()=>{if(session?.current.status==='open'){session.current.inputs=readInputs(E.current(session));persist();}});
+$('answerFields').addEventListener('change',()=>{if(session?.current.status==='open'){session.current.inputs=readInputs(E.current(session));persist();}});
+$('answerFields').addEventListener('keydown',e=>{if(!session||session.current.status!=='open'||!['ArrowUp','ArrowDown'].includes(e.key))return;if(e.target.id.startsWith('exp')){const v=e.target.value.trim();if(v&&!/^[+-]?\d+$/.test(v))return;e.preventDefault();const n=Number(v||0)+(e.key==='ArrowUp'?1:-1);e.target.value=String(Math.max(-99,Math.min(99,n)));session.current.inputs=readInputs(E.current(session));persist();}});
+window.addEventListener('pagehide',persist);document.addEventListener('visibilitychange',()=>{if(document.hidden)persist();});
+window.addEventListener('error',event=>{$('errorNotice').hidden=false;$('errorNotice').textContent='The activity encountered a problem. Your last saved progress has been kept. Reload the page to try again.';});
+setTheme(getStore(THEME)==='dark'?'dark':'light');
+try{const raw=getStore(STORE);if(raw){const s=JSON.parse(raw);if(E.validateSession(s)){saved=s;$('startNote').textContent='Saved practice found on this device. Start returns to it without resetting your score.';}else{$('storageNotice').hidden=false;$('storageNotice').textContent='The saved session could not be restored. Start will create a fresh round.';}}}catch{$('storageNotice').hidden=false;$('storageNotice').textContent='The saved session could not be read. Start will create a fresh round.';}
+storageMessage();
+
+})();</script>
 </body>
 </html>
